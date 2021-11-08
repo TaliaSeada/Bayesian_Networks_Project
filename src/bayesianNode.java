@@ -4,12 +4,31 @@ public class bayesianNode {
     private String name;
     private ArrayList<bayesianNode> parents;
     private ArrayList<bayesianNode> children;
+    private bayesianNetwork BN;
+
 //    private CPT cpt;
 
     //basic constructor
     public bayesianNode(String name) {
         this.name = name;
         this.parents = new ArrayList<bayesianNode>();
+        this.children = new ArrayList<bayesianNode>();
+    }
+
+    public bayesianNode(String name, ArrayList<String> parents, bayesianNetwork BN) {
+        this.name = name;
+        this.BN = BN;
+        this.parents = new ArrayList<bayesianNode>();
+        for(int i = 0; i < parents.size(); i++){
+            //if the parent already exists dont add a new Node, add this parent
+            if(this.BN.returnByName(parents.get(i)) != null){
+                this.parents.add(this.BN.returnByName(parents.get(i)));
+            }
+            //else create a new parent
+            else{
+                this.parents.add(new bayesianNode(parents.get(i)));
+            }
+        }
         this.children = new ArrayList<bayesianNode>();
     }
     //

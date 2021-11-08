@@ -11,24 +11,38 @@ public class bayesianNetwork {
         this._bayesianNetwork = new ArrayList<bayesianNode>(other._bayesianNetwork);
     }
 
-    public void build_network(String fileName){
-       LinkedList<LinkedList<String>> net = readXMLfile.read_net(fileName);
-        for(int i = 0; i < net.size(); i+=4){
-            bayesianNode n = new bayesianNode(net.get(i).get(0));
-            if(net.get(i+2).size() != 0){
-                for(int j = 0; j < net.get(i+2).size(); j++){
-                    bayesianNode p = new bayesianNode(net.get(i+2).get(j));
-                    n.addParent(p);
-//                    this._bayesianNetwork.get().addChild(n);
-                }
-
-            }
-            this._bayesianNetwork.add(n);
+    /*
+        this function adds nodes and set their parents to be their parent
+        meaning: add the nodes to their children array
+     */
+    public void add_set(bayesianNode node){
+        if(!this._bayesianNetwork.contains(node)){
+            this._bayesianNetwork.add(node);
+            setParent(node);
         }
-
-        System.out.println(this._bayesianNetwork.toString());
-
-
     }
+    private void setParent(bayesianNode node){
+         for(int i = 0; i < node.getParents().size(); i++){
+             if(!(node.getParents().get(i).getChildren().contains(node))){
+                 node.getParents().get(i).getChildren().add(node);
+             }
+         }
+    }
+
+    /*
+        this function checks if the parent is already in the network
+        in order to work recursively with the network we will have to insert the children references
+        to their parents, and the parents to their children
+     */
+    public bayesianNode returnByName(String parent){
+          for(int i = 0; i < this._bayesianNetwork.size(); i++){
+              //if my network contains this parent
+              if(this._bayesianNetwork.get(i).getName().equals(parent)){
+                  return this._bayesianNetwork.get(i);
+              }
+          }
+          return null;
+    }
+
 
 }
