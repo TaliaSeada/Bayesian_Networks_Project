@@ -13,81 +13,16 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class readXMLfile {
-    private static final String FILENAME1 = "src/alarm_net.xml";
-    private static final String FILENAME2 = "src/big_net.xml";
-    public static void main(String[] args) {
-        //alarm_net read:
-        alarm_net();
-        //big_net read:
-        big_net();
-    }
+    private static final String ALARM = "src/alarm_net.xml";
+    private static final String BIG = "src/big_net.xml";
 
-    public static void alarm_net(){
-        System.out.println("ALARM NET:");
+    public static void read_net(String filename){
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             // parse XML file
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document alarm_net = db.parse(new File(FILENAME1));
-
-            alarm_net.getDocumentElement().normalize();
-            System.out.println("Root Element :" + alarm_net.getDocumentElement().getNodeName());
-            System.out.println("-----------------------------");
-            // get <VARIABLE>
-            NodeList variable = alarm_net.getElementsByTagName("VARIABLE");
-            // get <DEFINITION>
-            NodeList definition = alarm_net.getElementsByTagName("DEFINITION");
-            for (int temp = 0; temp < variable.getLength(); temp++) {
-                Node node = variable.item(temp);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-
-                    // get text
-                    String name = element.getElementsByTagName("NAME").item(0).getTextContent();
-                    String outcome1 = element.getElementsByTagName("OUTCOME").item(0).getTextContent();
-                    String outcome2 = element.getElementsByTagName("OUTCOME").item(1).getTextContent();
-
-                    System.out.println("NAME : " + name);
-                    System.out.println("OUTCOME : " + outcome1);
-                    System.out.println("OUTCOME : " + outcome2);
-                    System.out.println();
-                }
-            }
-
-
-            for (int temp = 0; temp < definition.getLength(); temp++) {
-                Node node = definition.item(temp);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-
-                    // get text
-                    String name = element.getElementsByTagName("FOR").item(0).getTextContent();
-                    String table = element.getElementsByTagName("TABLE").item(0).getTextContent();
-
-                    System.out.println("FOR : " + name);
-                    System.out.println("TABLE : " + table);
-                    System.out.println();
-                }
-            }
-
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void big_net(){
-        System.out.println("BIG NET:");
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try {
-            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            // parse XML file
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document big_net = db.parse(new File(FILENAME2));
+            Document big_net = db.parse(new File(filename));
             big_net.getDocumentElement().normalize();
             System.out.println("Root Element :" + big_net.getDocumentElement().getNodeName());
             System.out.println("-----------------------------");
@@ -147,5 +82,8 @@ public class readXMLfile {
     }
 
 
+//    public static void main(String[] args) {
+//        read_net(ALARM);
+//    }
 
 }
