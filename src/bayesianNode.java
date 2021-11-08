@@ -1,18 +1,20 @@
 import java.util.ArrayList;
 
 public class bayesianNode {
-    private String event;
+    private String name;
     private ArrayList<bayesianNode> parents;
     private ArrayList<bayesianNode> children;
 //    private CPT cpt;
 
-    public bayesianNode() {
-        this.event = event;
+    //basic constructor
+    public bayesianNode(String name) {
+        this.name = name;
         this.parents = new ArrayList<bayesianNode>();
         this.children = new ArrayList<bayesianNode>();
     }
+    //
     public bayesianNode(String event, ArrayList<bayesianNode> parents, ArrayList<bayesianNode> children) {
-        this.event = event;
+        this.name = event;
         for(int i = 0; i < parents.size(); i++){
             this.parents.add(parents.get(i));
         }
@@ -20,8 +22,9 @@ public class bayesianNode {
             this.children.add(children.get(i));
         }
     }
+    //copy constructor
     public bayesianNode(bayesianNode other) {
-        this.event = other.getEvent();
+        this.name = other.getName();
         for(int i = 0; i < other.getParents().size(); i++){
             this.parents.add(other.getParents().get(i));
         }
@@ -30,12 +33,20 @@ public class bayesianNode {
         }
     }
 
-    public String getEvent() {
-        return event;
+    public void addParent(bayesianNode parent){
+        this.parents.add(new bayesianNode(parent));
     }
 
-    public void setEvent(String event) {
-        this.event = event;
+    public void addChild(bayesianNode child){
+        this.children.add(child);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ArrayList<bayesianNode> getParents() {

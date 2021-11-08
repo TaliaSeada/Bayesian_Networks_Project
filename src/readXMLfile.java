@@ -16,8 +16,16 @@ public class readXMLfile {
     private static final String ALARM = "src/alarm_net.xml";
     private static final String BIG = "src/big_net.xml";
 
-    public static void read_net(String filename){
+    public static LinkedList<LinkedList<String>> read_net(String filename){
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        LinkedList<LinkedList<String>> list = new LinkedList<LinkedList<String>>();
+//        for(int i = 0; i < 4; i++){
+//            list.add(new LinkedList<String>());
+//        }
+        LinkedList<String> variables = new LinkedList<String>();
+        LinkedList<String> outcomes = new LinkedList<String>();
+        LinkedList<String> givens = new LinkedList<String>();
+        LinkedList<String> tables = new LinkedList<String>();
         try {
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             // parse XML file
@@ -33,10 +41,10 @@ public class readXMLfile {
             NodeList definition = big_net.getElementsByTagName("DEFINITION");
 
             for (int i = 0; i < variable.getLength(); i++) {
-                LinkedList<String> variables = new LinkedList<String>();
-                LinkedList<String> outcomes = new LinkedList<String>();
-                LinkedList<String> givens = new LinkedList<String>();
-                LinkedList<String> tables = new LinkedList<String>();
+                variables = new LinkedList<String>();
+                outcomes = new LinkedList<String>();
+                givens = new LinkedList<String>();
+                tables = new LinkedList<String>();
 
                 LinkedList<String> definitions = new LinkedList<String>();
                 Node var = variable.item(i);
@@ -65,13 +73,18 @@ public class readXMLfile {
                     }
 
                 }
-                System.out.println("VARIABLES : " + variables);
-                System.out.println("OUTCOMES : " + outcomes);
-                System.out.println("GIVENS : " + givens);
-                System.out.println("TABLE : " + tables);
-                System.out.println();
-            }
 
+                list.add(variables);
+                list.add(outcomes);
+                list.add(givens);
+                list.add(tables);
+
+//                System.out.println("VARIABLES : " + variables);
+//                System.out.println("OUTCOMES : " + outcomes);
+//                System.out.println("GIVENS : " + givens);
+//                System.out.println("TABLE : " + tables);
+//                System.out.println();
+            }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -79,6 +92,7 @@ public class readXMLfile {
         } catch (SAXException e) {
             e.printStackTrace();
         }
+        return list;
     }
 
 
