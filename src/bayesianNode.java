@@ -15,6 +15,8 @@ public class bayesianNode {
     //
     public bayesianNode(String event, ArrayList<bayesianNode> parents, ArrayList<bayesianNode> children) {
         this.name = event;
+        this.parents = new ArrayList<bayesianNode>();
+        this.children = new ArrayList<bayesianNode>();
         for(int i = 0; i < parents.size(); i++){
             this.parents.add(parents.get(i));
         }
@@ -25,6 +27,8 @@ public class bayesianNode {
     //copy constructor
     public bayesianNode(bayesianNode other) {
         this.name = other.getName();
+        this.parents = new ArrayList<bayesianNode>();
+        this.children = new ArrayList<bayesianNode>();
         for(int i = 0; i < other.getParents().size(); i++){
             this.parents.add(other.getParents().get(i));
         }
@@ -43,6 +47,19 @@ public class bayesianNode {
 
     public String getName() {
         return name;
+    }
+
+    public String toString(){
+        String res = "name: " + name + "\nparents = [" ;
+        for(int i = 0; i < parents.size(); i++){
+            res += parents.get(i).getName() + ",";
+        }
+        res += "]\nchildren = [";
+        for(int i = 0; i < children.size(); i++){
+            res += children.get(i).getName() + ",";
+        }
+        res += "]\n";
+        return res;
     }
 
     public void setName(String name) {

@@ -19,9 +19,7 @@ public class readXMLfile {
     public static LinkedList<LinkedList<String>> read_net(String filename){
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         LinkedList<LinkedList<String>> list = new LinkedList<LinkedList<String>>();
-//        for(int i = 0; i < 4; i++){
-//            list.add(new LinkedList<String>());
-//        }
+
         LinkedList<String> variables = new LinkedList<String>();
         LinkedList<String> outcomes = new LinkedList<String>();
         LinkedList<String> givens = new LinkedList<String>();

@@ -2,43 +2,33 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class bayesianNetwork {
-    ArrayList<bayesianNode> _bayesianNode;
+    ArrayList<bayesianNode> _bayesianNetwork;
 
     public bayesianNetwork() {
-        this._bayesianNode = new ArrayList<bayesianNode>();
+        this._bayesianNetwork = new ArrayList<bayesianNode>();
     }
     public bayesianNetwork(bayesianNetwork other){
-        this._bayesianNode = new ArrayList<bayesianNode>(other._bayesianNode);
+        this._bayesianNetwork = new ArrayList<bayesianNode>(other._bayesianNetwork);
     }
 
-    public static void build_network(String fileName){
+    public void build_network(String fileName){
        LinkedList<LinkedList<String>> net = readXMLfile.read_net(fileName);
-        System.out.println(net);
         for(int i = 0; i < net.size(); i+=4){
-            System.out.println(net.get(i));
             bayesianNode n = new bayesianNode(net.get(i).get(0));
             if(net.get(i+2).size() != 0){
                 for(int j = 0; j < net.get(i+2).size(); j++){
                     bayesianNode p = new bayesianNode(net.get(i+2).get(j));
-                    p.addChild(n);
                     n.addParent(p);
-
+//                    this._bayesianNetwork.get().addChild(n);
                 }
+
             }
+            this._bayesianNetwork.add(n);
         }
-        System.out.println(net.get(0));
 
-
-
-
+        System.out.println(this._bayesianNetwork.toString());
 
 
     }
 
-
-
-    public static void main(String[] args){
-
-        build_network("src/alarm_net.xml");
-    }
 }
