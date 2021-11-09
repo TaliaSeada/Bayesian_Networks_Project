@@ -11,16 +11,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class readXMLfile {
-    private static final String ALARM = "src/alarm_net.xml";
-    private static final String BIG = "src/big_net.xml";
-
     public static bayesianNetwork read_net(String filename){
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        //build a network
         bayesianNetwork BN = new bayesianNetwork();
+        //create all the inputs in the xml file
         ArrayList<String> variables = new ArrayList<String>();
         ArrayList<String> outcomes = new ArrayList<String>();
         ArrayList<String> givens = new ArrayList<String>();
@@ -72,18 +69,8 @@ public class readXMLfile {
                     }
 
                 }
-
-//                list.add(variables);
-//                list.add(outcomes);
-//                list.add(givens);
-//                list.add(tables);
+                //add the node to the network
                 BN.add_set(new bayesianNode(variables.get(0),givens, BN));
-
-//                System.out.println("VARIABLES : " + variables);
-//                System.out.println("OUTCOMES : " + outcomes);
-//                System.out.println("GIVENS : " + givens);
-//                System.out.println("TABLE : " + tables);
-//                System.out.println();
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -96,8 +83,5 @@ public class readXMLfile {
     }
 
 
-//    public static void main(String[] args) {
-//        read_net(ALARM);
-//    }
 
 }

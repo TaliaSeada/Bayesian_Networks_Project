@@ -1,14 +1,28 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class bayesianNetwork {
-    ArrayList<bayesianNode> _bayesianNetwork;
+    ArrayList<bayesianNode> _bayesianNetwork = new ArrayList<bayesianNode>();
 
-    public bayesianNetwork() {
-        this._bayesianNetwork = new ArrayList<bayesianNode>();
-    }
+    //basic constructor
+    public bayesianNetwork() {}
+    //copy constructor
     public bayesianNetwork(bayesianNetwork other){
         this._bayesianNetwork = new ArrayList<bayesianNode>(other._bayesianNetwork);
+    }
+
+    /*
+       this function checks if the parent is already in the network
+       in order to work recursively with the network we will have to insert the children references
+       to their parents, and the parents to their children
+    */
+    public bayesianNode returnByName(String parent){
+        for(int i = 0; i < this._bayesianNetwork.size(); i++){
+            //if my network contains this parent
+            if(this._bayesianNetwork.get(i).getName().equals(parent)){
+                return this._bayesianNetwork.get(i);
+            }
+        }
+        return null;
     }
 
     /*
@@ -29,20 +43,7 @@ public class bayesianNetwork {
          }
     }
 
-    /*
-        this function checks if the parent is already in the network
-        in order to work recursively with the network we will have to insert the children references
-        to their parents, and the parents to their children
-     */
-    public bayesianNode returnByName(String parent){
-          for(int i = 0; i < this._bayesianNetwork.size(); i++){
-              //if my network contains this parent
-              if(this._bayesianNetwork.get(i).getName().equals(parent)){
-                  return this._bayesianNetwork.get(i);
-              }
-          }
-          return null;
-    }
+
 
 
 }

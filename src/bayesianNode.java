@@ -2,46 +2,15 @@ import java.util.ArrayList;
 
 public class bayesianNode {
     private String name;
-    private ArrayList<bayesianNode> parents;
-    private ArrayList<bayesianNode> children;
-    private bayesianNetwork BN;
-
+    private ArrayList<bayesianNode> parents = new ArrayList<bayesianNode>();
+    private ArrayList<bayesianNode> children = new ArrayList<bayesianNode>();
+    private bayesianNetwork BN; //links between the BN to its nodes
 //    private CPT cpt;
+//    ArrayList<String>outcomes=new ArrayList<>();
 
     //basic constructor
     public bayesianNode(String name) {
         this.name = name;
-        this.parents = new ArrayList<bayesianNode>();
-        this.children = new ArrayList<bayesianNode>();
-    }
-
-    public bayesianNode(String name, ArrayList<String> parents, bayesianNetwork BN) {
-        this.name = name;
-        this.BN = BN;
-        this.parents = new ArrayList<bayesianNode>();
-        for(int i = 0; i < parents.size(); i++){
-            //if the parent already exists dont add a new Node, add this parent
-            if(this.BN.returnByName(parents.get(i)) != null){
-                this.parents.add(this.BN.returnByName(parents.get(i)));
-            }
-            //else create a new parent
-            else{
-                this.parents.add(new bayesianNode(parents.get(i)));
-            }
-        }
-        this.children = new ArrayList<bayesianNode>();
-    }
-    //
-    public bayesianNode(String event, ArrayList<bayesianNode> parents, ArrayList<bayesianNode> children) {
-        this.name = event;
-        this.parents = new ArrayList<bayesianNode>();
-        this.children = new ArrayList<bayesianNode>();
-        for(int i = 0; i < parents.size(); i++){
-            this.parents.add(parents.get(i));
-        }
-        for(int i = 0; i < parents.size(); i++){
-            this.children.add(children.get(i));
-        }
     }
     //copy constructor
     public bayesianNode(bayesianNode other) {
@@ -56,18 +25,24 @@ public class bayesianNode {
         }
     }
 
-    public void addParent(bayesianNode parent){
-        this.parents.add(new bayesianNode(parent));
+    //read from xml file constructor
+    public bayesianNode(String name, ArrayList<String> parents, bayesianNetwork BN) {
+        this.name = name;
+        this.BN = BN;
+        //set parents by givens:
+        for(int i = 0; i < parents.size(); i++){
+            //if the parent already exists don't add a new Node, add this parent
+            if(this.BN.returnByName(parents.get(i)) != null){
+                this.parents.add(this.BN.returnByName(parents.get(i)));
+            }
+            //else create a new parent
+            else{
+                this.parents.add(new bayesianNode(parents.get(i)));
+            }
+        }
     }
 
-    public void addChild(bayesianNode child){
-        this.children.add(child);
-    }
-
-    public String getName() {
-        return name;
-    }
-
+    //to string function
     public String toString(){
         String res = "name: " + name + "\nparents = [" ;
         for(int i = 0; i < parents.size(); i++){
@@ -79,6 +54,10 @@ public class bayesianNode {
         }
         res += "]\n";
         return res;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
