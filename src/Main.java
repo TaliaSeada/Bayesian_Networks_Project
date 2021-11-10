@@ -7,7 +7,8 @@ public class Main {
 //        BN = readXMLfile.read_net(ALARM);
         readTextfile reader = new readTextfile("src/input.txt");
         String s = reader.readfile();
-        System.out.println(BN._bayesianNetwork);
+        System.out.println(s);
+//        System.out.println(BN._bayesianNetwork);
 
 
 

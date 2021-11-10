@@ -22,6 +22,7 @@ public class readTextfile {
             while((line = br.readLine()) != null){
                 lines.add(line);
             }
+            System.out.println(lines);
         } catch (FileNotFoundException e) {
             System.out.println("could not read this file.\n");
             e.printStackTrace();
@@ -39,15 +40,21 @@ public class readTextfile {
             BN = readXMLfile.read_net(BIG);
         }
         for(int i = 1; i < lines.size(); i++){
-            if(lines.get(i).charAt(0) == 'p'){
-//                ans = variablesElimination();
+            if(lines.get(i).charAt(0) == 'P'){
+                ans += "implement :/\n";
+//                ans += variablesElimination() + "\n";
             }
             else{
                 bayesianNode src = BN.returnByName(lines.get(i).charAt(0) + "");
                 bayesianNode dest = BN.returnByName(lines.get(i).charAt(2) + "");
                 ArrayList<bayesianNode> evidence = new ArrayList<>();
-
-                ans = BayesBall.isInd(BN, src,null, dest, evidence);
+                if(!(lines.get(i).length() == 4)){
+                    for(int j = 4; j < lines.size(); j+=4){
+                        bayesianNode e = new bayesianNode(lines.get(i).charAt(j) + "");
+                        evidence.add(e);
+                    }
+                }
+                ans += BayesBall.isInd(BN, src,null, dest, evidence) + "\n";
             }
         }
         return ans;
