@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * this class reads the XML files
+ */
 public class readXMLfile {
     public static bayesianNetwork read_net(String filename){
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -71,6 +74,12 @@ public class readXMLfile {
                 }
                 //add the node to the network
                 BN.add_set(new bayesianNode(variables.get(0),givens, BN));
+                String[] table = tables.get(0).split(" ");
+                for(int j = 0; j < table.length; j++){
+                    System.out.print(table[j] + ", ");
+                }
+                System.out.println();
+//                CPT cpt = new CPT(Query,table); //?????
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
