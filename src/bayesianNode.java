@@ -5,6 +5,7 @@ public class bayesianNode {
     private ArrayList<bayesianNode> parents = new ArrayList<bayesianNode>();
     private ArrayList<bayesianNode> children = new ArrayList<bayesianNode>();
     private bayesianNetwork BN; //links between the BN to its nodes
+    private boolean color = false;
 //    private CPT cpt;
 //    ArrayList<String>outcomes=new ArrayList<>();
 
@@ -56,27 +57,17 @@ public class bayesianNode {
         return res;
     }
 
+    //getters
+    public boolean getColor(){return color;}
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public ArrayList<bayesianNode> getParents() {
         return parents;
     }
-
-    public void setParents(ArrayList<bayesianNode> parents) {
-        this.parents = parents;
-    }
-
     public ArrayList<bayesianNode> getChildren() {
         return children;
     }
 
-    public void setChildren(ArrayList<bayesianNode> children) {
-        this.children = children;
-    }
+    public boolean setColor(boolean color){return this.color = color;}
 }

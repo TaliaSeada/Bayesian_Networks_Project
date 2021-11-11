@@ -22,7 +22,6 @@ public class readTextfile {
             while((line = br.readLine()) != null){
                 lines.add(line);
             }
-            System.out.println(lines);
         } catch (FileNotFoundException e) {
             System.out.println("could not read this file.\n");
             e.printStackTrace();
@@ -33,10 +32,10 @@ public class readTextfile {
 
     public String readfile(){
         String ans = "";
-        if(this.lines.get(0) == "alarm_net.xml"){
+        if(this.lines.get(0).equals("alarm_net.xml")){
             BN = readXMLfile.read_net(ALARM);
         }
-        if(this.lines.get(0) == "big_net.xml"){
+        if(this.lines.get(0).equals("big_net.xml")){
             BN = readXMLfile.read_net(BIG);
         }
         for(int i = 1; i < lines.size(); i++){
@@ -50,10 +49,11 @@ public class readTextfile {
                 ArrayList<bayesianNode> evidence = new ArrayList<>();
                 if(!(lines.get(i).length() == 4)){
                     for(int j = 4; j < lines.size(); j+=4){
-                        bayesianNode e = new bayesianNode(lines.get(i).charAt(j) + "");
+                        bayesianNode e = BN.returnByName(lines.get(i).charAt(j) + "");
                         evidence.add(e);
                     }
                 }
+                System.out.println(lines.get(i));
                 ans += BayesBall.isInd(BN, src,null, dest, evidence) + "\n";
             }
         }
