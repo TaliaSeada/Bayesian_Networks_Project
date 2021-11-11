@@ -37,18 +37,18 @@ public class BayesBall {
         else{
             if(src.getParents().contains(last)){
                 for(int i=0;i<src.getChildren().size();i++) {
-                    if(src.getChildren().get(i) != last && !bayesBall(bn,src.getChildren().get(i),dest,evidence,src))
+                    if(!bayesBall(bn,src.getChildren().get(i),dest,evidence,src))
                         return false;
                 }
                 return true;
             }
             else{
                 for(int i=0;i<src.getParents().size();i++) {
-                    if(src.getParents().get(i) != last && !bayesBall(bn,src.getParents().get(i),dest,evidence,src))
+                    if(!bayesBall(bn,src.getParents().get(i),dest,evidence,src))
                         return false;
                 }
                 for(int i=0;i<src.getChildren().size();i++) {
-                    if(src.getChildren().get(i) != last && !bayesBall(bn,src.getChildren().get(i),dest,evidence,src))
+                    if(!bayesBall(bn,src.getChildren().get(i),dest,evidence,src))
                         return false;
                 }
                 return true;
