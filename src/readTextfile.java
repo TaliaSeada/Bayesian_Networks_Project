@@ -53,8 +53,7 @@ public class readTextfile {
                         evidence.add(e);
                     }
                 }
-                System.out.println(lines.get(i));
-                ans += BayesBall.isInd(BN, src,null, dest, evidence) + "\n";
+                ans += BayesBall.isInd(BN, src, dest, evidence) + "\n";
             }
         }
         return ans;
