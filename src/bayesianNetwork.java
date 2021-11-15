@@ -43,6 +43,19 @@ public class bayesianNetwork {
          }
     }
 
+    public void fixNet(){
+        for(int i = 0; i < this._bayesianNetwork.size(); i++){
+            bayesianNode curr = returnByName(this._bayesianNetwork.get(i).getName());
+            //check if i is in its parents list
+            for(int j = 0; j < curr.getParents().size(); j++){
+                bayesianNode parent = returnByName(curr.getParents().get(j).getName());
+                if(!parent.getChildren().contains(curr)){
+                    parent.getChildren().add(curr);
+                }
+            }
+        }
+    }
+
 
 
 
