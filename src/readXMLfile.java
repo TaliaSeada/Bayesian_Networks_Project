@@ -29,15 +29,15 @@ public class readXMLfile {
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             // parse XML file
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document big_net = db.parse(new File(filename));
-            big_net.getDocumentElement().normalize();
-            System.out.println("Root Element :" + big_net.getDocumentElement().getNodeName());
+            Document net = db.parse(new File(filename));
+            net.getDocumentElement().normalize();
+            System.out.println("Root Element :" + net.getDocumentElement().getNodeName());
             System.out.println("-----------------------------");
 
             // get <VARIABLE>
-            NodeList variable = big_net.getElementsByTagName("VARIABLE");
+            NodeList variable = net.getElementsByTagName("VARIABLE");
             // get <DEFINITION>
-            NodeList definition = big_net.getElementsByTagName("DEFINITION");
+            NodeList definition = net.getElementsByTagName("DEFINITION");
 
             for (int i = 0; i < variable.getLength(); i++) {
                 variables = new ArrayList<String>();
@@ -57,6 +57,10 @@ public class readXMLfile {
                         outcomes.add(outcome_var.getElementsByTagName("OUTCOME").item(j).getTextContent());
                     }
                 }
+
+
+
+
                 Node def = definition.item(i);
                 if (def.getNodeType() == Node.ELEMENT_NODE) {
                     Element outcome_def = (Element) def;
@@ -73,11 +77,11 @@ public class readXMLfile {
 
                 }
                 String[] table = tables.get(0).split(" ");
-                for(int j = 0; j < table.length; j++){
-                    System.out.print(table[j] + ", ");
-                }
-                System.out.println();
-                System.out.println(outcomes);
+//                for(int j = 0; j < table.length; j++){
+//                    System.out.print(table[j] + ", ");
+//                }
+//                System.out.println();
+//                System.out.println(outcomes);
                 CPT cpt = new CPT(outcomes, table);
 
                 //add the node to the network

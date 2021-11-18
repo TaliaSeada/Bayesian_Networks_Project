@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -33,12 +34,13 @@ public class readTextfile {
 
     public String readfile() {
         String ans = "";
-        if (this.lines.get(0).equals("alarm_net.xml")) {
-            BN = readXMLfile.read_net(ALARM);
-        }
-        if (this.lines.get(0).equals("big_net.xml")) {
-            BN = readXMLfile.read_net(BIG);
-        }
+        BN = readXMLfile.read_net("src/" + this.lines.get(0));
+//        if (this.lines.get(0).equals("alarm_net.xml")) {
+//            BN = readXMLfile.read_net(ALARM);
+//        }
+//        if (this.lines.get(0).equals("big_net.xml")) {
+//            BN = readXMLfile.read_net(BIG);
+//        }
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).charAt(0) == 'P') {
                 ans += "implement :/\n";
