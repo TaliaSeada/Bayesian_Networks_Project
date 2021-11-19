@@ -6,7 +6,7 @@ public class BayesBall {
 //    private static HashMap<String,bayesianNode> passed = new HashMap<String,bayesianNode>();
 
     public static String isInd(bayesianNetwork bn, bayesianNode src, bayesianNode dest, ArrayList<bayesianNode> evidence) {
-//        System.out.println(evidence);
+        passed = new ArrayList<>();
         if (bayesBall(bn, src, dest, evidence, null, passed)) {
             return "yes"; //independent
         } else {
@@ -16,7 +16,7 @@ public class BayesBall {
 
     //bayes ball: dependent return false, independent return true
     private static boolean bayesBall(bayesianNetwork bn, bayesianNode src, bayesianNode dest, ArrayList<bayesianNode> evidence, bayesianNode last, ArrayList<bayesianNode> passed) {
-        if (src.equals(dest)) return false;
+        if (bn.returnByName(src.getName()).equals(bn.returnByName(dest.getName()))) return false;
         //given
         if (evidence.contains(src)) {
             //came from child
@@ -32,7 +32,7 @@ public class BayesBall {
                         Only if this is the first time we get to this node - go in, else move on
                      */
                     if (!passed.contains(src.getParents().get(i))) {
-                        passed.add(src);
+                        passed.add(src); //true
                         if (!bayesBall(bn, src.getParents().get(i), dest, evidence, src, passed))
                             return false;
                     }
@@ -45,8 +45,11 @@ public class BayesBall {
             //came from parent
             if (src.getParents().contains(last)) {
                 for (int i = 0; i < src.getChildren().size(); i++) {
-                    if (!bayesBall(bn, src.getChildren().get(i), dest, evidence, src, passed))
-                        return false;
+                    if (!passed.contains(src.getChildren().get(i))) {
+//                        passed.add(src);
+                        if (!bayesBall(bn, src.getChildren().get(i), dest, evidence, src, passed))
+                            return false;
+                    }
 
                 }
                 return true;
@@ -56,14 +59,17 @@ public class BayesBall {
                 for (int i = 0; i < src.getParents().size(); i++) {
                     // Only if this is the first time we get to this node - go in, else move on
                     if (!passed.contains(src.getParents().get(i))) {
-                        passed.add(src);
+                        passed.add(src); //true
                         if (!bayesBall(bn, src.getParents().get(i), dest, evidence, src, passed))
                             return false;
                     }
                 }
                 for (int i = 0; i < src.getChildren().size(); i++) {
+                    if (!passed.contains(src.getChildren().get(i))) {
+                        passed.add(src); //true
                         if (!bayesBall(bn, src.getChildren().get(i), dest, evidence, src, passed))
                             return false;
+                    }
                 }
                 return true;
 

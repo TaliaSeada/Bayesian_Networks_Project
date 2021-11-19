@@ -35,12 +35,6 @@ public class readTextfile {
     public String readfile() {
         String ans = "";
         BN = readXMLfile.read_net("src/" + this.lines.get(0));
-//        if (this.lines.get(0).equals("alarm_net.xml")) {
-//            BN = readXMLfile.read_net(ALARM);
-//        }
-//        if (this.lines.get(0).equals("big_net.xml")) {
-//            BN = readXMLfile.read_net(BIG);
-//        }
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).charAt(0) == 'P') {
                 ans += "implement :/\n";
@@ -48,14 +42,20 @@ public class readTextfile {
             } else {
                 String[] given_split = lines.get(i).split("\\|");
                 String[] query = given_split[0].split("-");
+//                System.out.println(Arrays.toString(given_split));
                 ArrayList<bayesianNode> evidence = new ArrayList<>();
                 if (given_split.length > 1) {
                     String[] ev = given_split[1].split(",");
+//                    System.out.println(Arrays.toString(ev));
                     for (int j = 0; j < ev.length; j++) {
-                        bayesianNode e = BN.returnByName(ev[0].charAt(0)+"");
+                        String[] one = ev[j].split("=");
+//                        System.out.println(Arrays.toString(one));
+                        bayesianNode e = BN.returnByName(one[0]);
+//                        System.out.println((e));
                         evidence.add(e);
                     }
                 }
+//                System.out.println(evidence);
                 bayesianNode src = BN.returnByName(query[0]);
                 bayesianNode dest = BN.returnByName(query[1]);
 
