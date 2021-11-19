@@ -19,7 +19,6 @@ public class BayesBall {
         if (bn.returnByName(src.getName()).equals(bn.returnByName(dest.getName()))) return false;
         //given
         if (evidence.contains(src)) {
-            //came from child
             if (src.getChildren().contains(last)) {
                 return true;
             }
@@ -46,7 +45,6 @@ public class BayesBall {
             if (src.getParents().contains(last)) {
                 for (int i = 0; i < src.getChildren().size(); i++) {
                     if (!passed.contains(src.getChildren().get(i))) {
-//                        passed.add(src);
                         if (!bayesBall(bn, src.getChildren().get(i), dest, evidence, src, passed))
                             return false;
                     }
