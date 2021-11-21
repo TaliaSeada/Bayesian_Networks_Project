@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * this class reads the XML files
@@ -81,12 +82,10 @@ public class readXMLfile {
 //                    System.out.print(table[j] + ", ");
 //                }
 //                System.out.println();
-//                System.out.println(outcomes);
-                CPT cpt = new CPT(outcomes, table);
-
+                bayesianNode bn = new bayesianNode(variables.get(0),givens, BN, outcomes);
                 //add the node to the network
-                BN.add_set(new bayesianNode(variables.get(0),givens, BN));
-
+                BN.add_set(bn);
+                bn.build(table);
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

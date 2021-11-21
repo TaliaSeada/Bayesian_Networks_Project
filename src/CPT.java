@@ -2,16 +2,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CPT {
-    HashMap<String, hashVal> _cpt;
+    String name;
+    ArrayList<HashMap<String, String>> cpt = new ArrayList<>();
+    HashMap<String, String> line;
 
-    public CPT(ArrayList<String> outcomes, String[] probs) {
-        _cpt = new HashMap<String, hashVal>();
-        
+    public CPT(){
+
     }
-
-}
-
-class hashVal {
-
 
 }

@@ -66,4 +66,8 @@ public class readTextfile {
         return ans;
     }
 
+//    public void writefile() {
+//
+//    }
+
 }
