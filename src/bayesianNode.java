@@ -61,7 +61,7 @@ public class bayesianNode {
         for (int i = 0; i < table.length; i++) {
             this.cpt.add(cpt(table[i], i));
         }
-        System.out.println(cpt);
+//        System.out.println(cpt);
     }
     private HashMap cpt(String prob, int index) {
         HashMap ln = new HashMap();
@@ -71,13 +71,13 @@ public class bayesianNode {
             value = this.outcomes.get((int) (index) % amountOfValues);
             ln.put(this.name, value);
         }
-        for (int i = 0; i < this.parents.size(); i++) {
+        for (int i = this.parents.size()-1; i >= 0 ; i--) {
             value = this.parents.get(i).outcomes.get((int) (index / amountOfValues) % this.parents.get(i).outcomes.size());
             amountOfValues *= this.parents.get(i).outcomes.size();
             ln.put(this.parents.get(i).getName(), value);
         }
         ln.put("P",prob);
-//        System.out.println(ln);
+        System.out.println(ln);
         return ln;
     }
 

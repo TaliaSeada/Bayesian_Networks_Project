@@ -76,10 +76,6 @@ public class readXMLfile {
 
                 }
                 String[] table = tables.get(0).split(" ");
-//                for(int j = 0; j < table.length; j++){
-//                    System.out.print(table[j] + ", ");
-//                }
-//                System.out.println();
                 cpts.add(table);
                 bayesianNode bn = new bayesianNode(variables.get(0),givens, BN, outcomes);
                 //add the node to the network
@@ -93,7 +89,7 @@ public class readXMLfile {
             e.printStackTrace();
         }
         BN.fixNet();
-        //build cpts:
+        //build CPT:
         for(int i = 0; i < BN._bayesianNetwork.size(); i++){
             BN._bayesianNetwork.get(i).build(cpts.get(i));
         }

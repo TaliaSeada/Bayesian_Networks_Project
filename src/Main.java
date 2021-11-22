@@ -7,7 +7,7 @@ public class Main {
 //        BN = readXMLfile.read_net("src/big_net.xml");
 //        BN = readXMLfile.read_net("src/example.xml");
 
-        String path = "src/input2.txt";
+        String path = "src/input.txt";
         readTextfile reader = new readTextfile(path);
         String s = reader.readfile();
         System.out.println(s);
