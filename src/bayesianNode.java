@@ -30,6 +30,10 @@ public class bayesianNode {
         for (int i = 0; i < other.cpt.size(); i++) {
             this.cpt.add(other.cpt.get(i));
         }
+        outcomes = new ArrayList<String>();
+        for (int i = 0; i < other.outcomes.size(); i++) {
+            this.outcomes.add(other.outcomes.get(i));
+        }
     }
 
     //read from xml file constructor
@@ -59,7 +63,6 @@ public class bayesianNode {
         }
         System.out.println(cpt);
     }
-
     private HashMap cpt(String prob, int index) {
         HashMap ln = new HashMap();
         String value = new String();
@@ -74,6 +77,7 @@ public class bayesianNode {
             ln.put(this.parents.get(i).getName(), value);
         }
         ln.put("P",prob);
+//        System.out.println(ln);
         return ln;
     }
 
@@ -106,6 +110,12 @@ public class bayesianNode {
 
     public ArrayList<String> getOutcomes() {
         return outcomes;
+    }
+    public void setOutcomes(ArrayList<String> outcomes){
+        this.outcomes = new ArrayList<String>();
+        for (int i = 0; i < outcomes.size(); i++) {
+            this.outcomes.add(outcomes.get(i));
+        }
     }
 
 }

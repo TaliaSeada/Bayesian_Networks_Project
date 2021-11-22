@@ -11,13 +11,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * this class reads the XML files
  */
 public class readXMLfile {
     public static bayesianNetwork read_net(String filename){
+        ArrayList<String[]> cpts = new ArrayList<String[]>();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         //build a network
         bayesianNetwork BN = new bayesianNetwork();
@@ -60,8 +60,6 @@ public class readXMLfile {
                 }
 
 
-
-
                 Node def = definition.item(i);
                 if (def.getNodeType() == Node.ELEMENT_NODE) {
                     Element outcome_def = (Element) def;
@@ -82,10 +80,10 @@ public class readXMLfile {
 //                    System.out.print(table[j] + ", ");
 //                }
 //                System.out.println();
+                cpts.add(table);
                 bayesianNode bn = new bayesianNode(variables.get(0),givens, BN, outcomes);
                 //add the node to the network
                 BN.add_set(bn);
-                bn.build(table);
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -95,6 +93,10 @@ public class readXMLfile {
             e.printStackTrace();
         }
         BN.fixNet();
+        //build cpts:
+        for(int i = 0; i < BN._bayesianNetwork.size(); i++){
+            BN._bayesianNetwork.get(i).build(cpts.get(i));
+        }
         return BN;
     }
 
