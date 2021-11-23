@@ -77,7 +77,7 @@ public class bayesianNode {
             ln.put(this.parents.get(i).getName(), value);
         }
         ln.put("P",prob);
-        System.out.println(ln);
+//        System.out.println(ln);
         return ln;
     }
 
