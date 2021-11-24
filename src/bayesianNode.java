@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class bayesianNode {
     private String name;
@@ -8,7 +9,7 @@ public class bayesianNode {
     private ArrayList<bayesianNode> children = new ArrayList<bayesianNode>();
     private ArrayList<String> outcomes = new ArrayList<String>();
     private bayesianNetwork BN; //links between the BN to its nodes
-    private ArrayList<HashMap> cpt;
+    private ArrayList<HashMap<String, String>> cpt;
 
     //basic constructor
     public bayesianNode(String name) {
@@ -26,7 +27,7 @@ public class bayesianNode {
         for (int i = 0; i < other.getParents().size(); i++) {
             this.children.add(other.getChildren().get(i));
         }
-        this.cpt = new ArrayList<HashMap>();
+        this.cpt = new ArrayList<HashMap<String, String>>();
         for (int i = 0; i < other.cpt.size(); i++) {
             this.cpt.add(other.cpt.get(i));
         }
@@ -54,14 +55,13 @@ public class bayesianNode {
         for (int i = 0; i < outcomes.size(); i++) {
             this.outcomes.add(outcomes.get(i));
         }
-        this.cpt = new ArrayList<HashMap>();
+        this.cpt = new ArrayList<HashMap<String, String>>();
     }
 
     public void build(String[] table) {
         for (int i = 0; i < table.length; i++) {
             this.cpt.add(cpt(table[i], i));
         }
-//        System.out.println(cpt);
     }
     private HashMap cpt(String prob, int index) {
         HashMap ln = new HashMap();
@@ -92,6 +92,7 @@ public class bayesianNode {
             res += children.get(i).getName() + ",";
         }
         res += "]\n";
+        res += this.cpt;
         return res;
     }
 
@@ -111,11 +112,16 @@ public class bayesianNode {
     public ArrayList<String> getOutcomes() {
         return outcomes;
     }
+
     public void setOutcomes(ArrayList<String> outcomes){
         this.outcomes = new ArrayList<String>();
         for (int i = 0; i < outcomes.size(); i++) {
             this.outcomes.add(outcomes.get(i));
         }
+    }
+
+    public ArrayList<HashMap<String, String>> getCPT(){
+        return this.cpt;
     }
 
 }

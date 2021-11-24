@@ -44,7 +44,7 @@ public class BayesBall {
         }
         //not given
         else {
-            //came from parent
+            //came from child
             if (src.getChildren().contains(last)) {
                 for (int i = 0; i < src.getParents().size(); i++) {
                     // Only if this is the first time we get to this node - go in, else move on
@@ -63,7 +63,7 @@ public class BayesBall {
                 }
                 return true;
             }
-            //came from child
+            //came from parent
             else {
                 for (int i = 0; i < src.getChildren().size(); i++) {
                     if (!passed.contains(src.getChildren().get(i))) {

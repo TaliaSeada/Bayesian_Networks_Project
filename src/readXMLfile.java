@@ -32,8 +32,6 @@ public class readXMLfile {
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document net = db.parse(new File(filename));
             net.getDocumentElement().normalize();
-            System.out.println("Root Element :" + net.getDocumentElement().getNodeName());
-            System.out.println("-----------------------------");
 
             // get <VARIABLE>
             NodeList variable = net.getElementsByTagName("VARIABLE");
