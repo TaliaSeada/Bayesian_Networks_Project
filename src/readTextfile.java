@@ -57,7 +57,7 @@ public class readTextfile {
 //                System.out.println(Arrays.toString(given_split));
                 String query = given_split[0];
                 String[] evi = given_split[1].split(",");
-//                System.out.println(Arrays.toString(evi));
+                System.out.println(Arrays.toString(evi));
 
                 ans += "implement :/\n";
 //                ans += variablesElimination(query, hidden, evi,) + "\n";

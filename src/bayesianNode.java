@@ -62,6 +62,7 @@ public class bayesianNode {
         for (int i = 0; i < table.length; i++) {
             this.cpt.add(cpt(table[i], i));
         }
+
     }
     private HashMap cpt(String prob, int index) {
         HashMap ln = new HashMap();

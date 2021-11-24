@@ -5,8 +5,8 @@ import java.util.Set;
 
 public class factor {
     String name;
-    ArrayList<HashMap<String, String>> factor;
-    ArrayList<String> evidence;
+    ArrayList<HashMap<String, String>> factor = new ArrayList<HashMap<String, String>>();
+    ArrayList<String> evidence = new ArrayList<>();
 
     // new factor to build
     public factor(String name){
@@ -25,6 +25,18 @@ public class factor {
             this.evidence.add(evidence[i]);
         }
     }
+
+    // copy
+    public factor(factor other){
+        this.name = other.name;
+        for(int i = 0; i < other.factor.size(); i++){
+            this.factor.add(hashMapCopy(other.factor.get(i)));
+        }
+        for(int i = 0; i < other.evidence.size(); i++){
+            this.evidence.add(evidence.get(i));
+        }
+    }
+
     private HashMap hashMapCopy(HashMap line){
         HashMap res = new HashMap();
         for(int i = 0; i < line.size(); i++){
@@ -45,8 +57,25 @@ public class factor {
     }
 
     // this function removes the irrelevant rows out of the factor
-    public void removeIrrelevantRows(ArrayList<String> outcomes){
+    public void removeIrrelevantRows(){
+        factor res = new factor(this.name);
+        HashMap<String, String> ln = new HashMap<String, String>();
+        // iterate over the evidence list and check if the cpt contains this evidence, if so add it to the factor
+        for(int i = 0; i < this.evidence.size(); i++){
+            String[] evi = evidence.get(i).split("=");
+            for(int j = 0; j < this.factor.size(); j++){
+                for(String key : this.factor.get(j).keySet()){
+                    int val = 0;
+                    if(key.equals(evi[0]) && this.factor.get(j).values().toArray()[val].equals(evi[1])){
+                        ln.put(key, evi[1]);
+                        res.factor.add(ln);
+                    }
+                    val++;
+                }
+            }
 
+        }
+        this.factor = res.factor;
     }
 
 
