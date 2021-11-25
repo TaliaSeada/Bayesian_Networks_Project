@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Set;
+import java.util.*;
 
 public class factor {
     String name;
@@ -57,25 +54,29 @@ public class factor {
     }
 
     // this function removes the irrelevant rows out of the factor
-    public void removeIrrelevantRows(){
-        factor res = new factor(this.name);
-        HashMap<String, String> ln = new HashMap<String, String>();
-        // iterate over the evidence list and check if the cpt contains this evidence, if so add it to the factor
+    public void removeIrrelevantRows() {
+        // iterate over the columns and check every line, and take only the ones that are givens
+        ArrayList<String> evi = new ArrayList<>();
         for(int i = 0; i < this.evidence.size(); i++){
-            String[] evi = evidence.get(i).split("=");
-            for(int j = 0; j < this.factor.size(); j++){
-                for(String key : this.factor.get(j).keySet()){
-                    int val = 0;
-                    if(key.equals(evi[0]) && this.factor.get(j).values().toArray()[val].equals(evi[1])){
-                        ln.put(key, evi[1]);
-                        res.factor.add(ln);
-                    }
-                    val++;
-                }
+            String[] e = this.evidence.get(i).split("=");
+            for(int j = 0; j < e.length; j++){
+                evi.add(e[j]);
             }
-
         }
-        this.factor = res.factor;
+        System.out.println(evi);
+        for(int i = 0; i < this.factor.size(); i++) {
+            int val = 0;
+            for (String key : this.factor.get(i).keySet()) {
+                if(!key.equals("P")) {
+                    for (int j = 0; j < evi.size()-1; j++) {
+                        if (evi.get(j).equals(key) && !evi.get(j+1).equals(this.factor.get(i).values().toArray()[val])) {
+                            this.factor.remove(i--);
+                        }
+                    }
+                }
+                val++;
+            }
+        }
     }
 
 

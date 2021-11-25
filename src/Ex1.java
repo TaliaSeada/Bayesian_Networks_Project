@@ -13,10 +13,10 @@ public class Ex1 {
 //        System.out.println(s);
 //        System.out.println(BN._bayesianNetwork);
 
-        System.out.println(BN._bayesianNetwork.get(1).getCPT());
-        String[] ev = {"J=T","M=T"};
-        factor f = new factor(BN._bayesianNetwork.get(1).getName(), BN._bayesianNetwork.get(1).getCPT(), ev);
-        System.out.println(f.factor);
+        int node  = 3;
+        System.out.println(BN._bayesianNetwork.get(node).getCPT());
+        String[] ev = {"E=T","A=T"};
+        factor f = new factor(BN._bayesianNetwork.get(node).getName(), BN._bayesianNetwork.get(node).getCPT(), ev);
         f.removeIrrelevantRows();
         System.out.println(f.factor);
 
