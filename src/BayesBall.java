@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class BayesBall {
     private static ArrayList<bayesianNode> passed = new ArrayList<>();
-//    private static HashMap<String,bayesianNode> passed = new HashMap<String,bayesianNode>();
 
     public static String isInd(bayesianNetwork bn, bayesianNode src, bayesianNode dest, ArrayList<bayesianNode> evidence) {
         passed = new ArrayList<>();
@@ -45,7 +43,7 @@ public class BayesBall {
         //not given
         else {
             //came from child
-            if (src.getChildren().contains(last)) {
+            if (src.getChildren().contains(last) || last == (null)) {
                 for (int i = 0; i < src.getParents().size(); i++) {
                     // Only if this is the first time we get to this node - go in, else move on
                     if (!passed.contains(src.getParents().get(i))) {

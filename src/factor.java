@@ -63,14 +63,14 @@ public class factor {
                 evi.add(e[j]);
             }
         }
-        System.out.println(evi);
         for(int i = 0; i < this.factor.size(); i++) {
             int val = 0;
             for (String key : this.factor.get(i).keySet()) {
                 if(!key.equals("P")) {
                     for (int j = 0; j < evi.size()-1; j++) {
                         if (evi.get(j).equals(key) && !evi.get(j+1).equals(this.factor.get(i).values().toArray()[val])) {
-                            this.factor.remove(i--);
+                            this.factor.remove(i);
+                            if(i > 0) i--;
                         }
                     }
                 }
@@ -79,7 +79,9 @@ public class factor {
         }
     }
 
-
-
-
+    public String toString() {
+        return "name='" + name + '\'' +
+                ", factor=" + factor +
+                ", evidence=" + evidence + "\n";
+    }
 }

@@ -52,15 +52,16 @@ public class readTextfile {
 //                System.out.println(probs[0]);
 //                System.out.println(hiddens);
                 String[] hidden = hiddens[0].split("-");
-//                System.out.println(Arrays.toString(hidden));
+//                System.out.println("hiddens:" + Arrays.toString(hidden));
                 String[] given_split = probs[0].split("\\|");
 //                System.out.println(Arrays.toString(given_split));
                 String query = given_split[0];
+//                System.out.println("q:" + query);
                 String[] evi = given_split[1].split(",");
-                System.out.println(Arrays.toString(evi));
+                System.out.println("evi:" + Arrays.toString(evi));
 
                 ans += "implement :/\n";
-//                ans += variablesElimination(query, hidden, evi,) + "\n";
+//                ans += variableElimination.ve(query, hidden, evi, BN) + "\n";
             }
             else {
                 String[] given_split = lines.get(i).split("\\|");
