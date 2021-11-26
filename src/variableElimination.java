@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class variableElimination {
     bayesianNode query;
     ArrayList<bayesianNode> hidden = new ArrayList<bayesianNode>();
     ArrayList<bayesianNode> evidence = new ArrayList<bayesianNode>();
+    ArrayList<String> evi = new ArrayList<String>();
     bayesianNetwork BN;
     ArrayList<factor> factors = new ArrayList<factor>();
     int multiply = 0;
@@ -17,6 +19,7 @@ public class variableElimination {
             this.hidden.add(BN.returnByName(hidden[i]));
         }
         for(int i = 0; i < evidence.length; i++){
+            this.evi.add(evidence[i]);
             String[] e = evidence[i].split("=");
             this.evidence.add(BN.returnByName(e[0]));
         }
@@ -44,11 +47,12 @@ public class variableElimination {
         // create only the relevant nodes
         for(int i = 0; i < BN._bayesianNetwork.size(); i++){
             if(!irrelevant.contains(BN._bayesianNetwork.get(i))){
-                String[] e = new String[this.evidence.size()];
-                for(int j = 0; j < this.evidence.size(); j++){
-                    e[j] = this.evidence.get(j).getName();
+                String[] e = new String[this.evi.size()];
+                for(int j = 0; j < this.evi.size(); j++){
+                    e[j] = this.evi.get(j);
                 }
                 factor f = new factor(BN._bayesianNetwork.get(i).getName(), BN._bayesianNetwork.get(i).getCPT(), e);
+                f.removeIrrelevantRows();
                 this.factors.add(f);
             }
         }
@@ -114,5 +118,7 @@ public class variableElimination {
 //    public boolean answerInFactor(){
 //
 //    }
+
+
 
 }

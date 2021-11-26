@@ -58,10 +58,10 @@ public class readTextfile {
                 String query = given_split[0];
 //                System.out.println("q:" + query);
                 String[] evi = given_split[1].split(",");
-                System.out.println("evi:" + Arrays.toString(evi));
+//                System.out.println("evi:" + Arrays.toString(evi));
+                variableElimination ve = new variableElimination(query, hidden, evi, BN);
 
                 ans += "implement :/\n";
-//                ans += variableElimination.ve(query, hidden, evi, BN) + "\n";
             }
             else {
                 String[] given_split = lines.get(i).split("\\|");
@@ -70,7 +70,6 @@ public class readTextfile {
                 ArrayList<bayesianNode> evidence = new ArrayList<>();
                 if (given_split.length > 1) {
                     String[] ev = given_split[1].split(",");
-//                String[]
 //                System.out.println(Arrays.toString(ev));
                     for (int j = 0; j < ev.length; j++) {
                         String[] one = ev[j].split("=");
