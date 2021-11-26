@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 
 public class variableElimination {
     bayesianNode query;
@@ -23,12 +23,25 @@ public class variableElimination {
         this.BN = BN;
         //init factors:
         generateFactors();
+        removeOneSize();
+        sort();
         System.out.println(factors);
     }
 
     // this function generates the relevant factor for the given question
     private void generateFactors(){
         ArrayList<bayesianNode> irrelevant = findIrrelevantNodes();
+        // remove the factors that the irrelevant nodes are in
+        for(int i = 0; i < BN._bayesianNetwork.size(); i++) {
+            for (int j = 0; j < BN._bayesianNetwork.get(i).getCPT().size(); j++) {
+                for (String key : BN._bayesianNetwork.get(i).getCPT().get(j).keySet()) {
+                    if (irrelevant.contains(BN.returnByName(key))) {
+                        irrelevant.add(BN._bayesianNetwork.get(i));
+                    }
+                }
+            }
+        }
+        // create only the relevant nodes
         for(int i = 0; i < BN._bayesianNetwork.size(); i++){
             if(!irrelevant.contains(BN._bayesianNetwork.get(i))){
                 String[] e = new String[this.evidence.size()];
@@ -82,5 +95,24 @@ public class variableElimination {
         return false;
     }
 
+    // this function runs over the factors and removes the factors that have only one line
+    public void removeOneSize(){
+        for(int i = 0; i < this.factors.size(); i++){
+            if(this.factors.get(i).factor.size() < 2){
+                this.factors.remove(i);
+                if(i > 0) i--;
+            }
+        }
+    }
+
+    // sort the factors by the implementations of compareTo in the factor class
+    public void sort(){
+        Collections.sort(factors);
+    }
+
+//    // this function checks if the answer is one of the cells in the query factor
+//    public boolean answerInFactor(){
+//
+//    }
 
 }

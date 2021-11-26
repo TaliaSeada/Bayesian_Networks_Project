@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class factor {
+public class factor  implements Comparable<factor>{
     String name;
     ArrayList<HashMap<String, String>> factor = new ArrayList<HashMap<String, String>>();
     ArrayList<String> evidence = new ArrayList<>();
@@ -77,6 +77,34 @@ public class factor {
                 val++;
             }
         }
+    }
+
+    /*
+        this function compare between two factors
+        first by the size of their CPT's
+        then if they are equal it compares between their ascii value
+    */
+    @Override
+    public int compareTo(factor f) {
+        int flag = 0;
+        if(this.factor.size() > f.factor.size()){
+            flag = 1;
+        }
+        else if(this.factor.size() < f.factor.size()) {
+            flag = -1;
+        }
+        else {
+            if(this.lexiSize() > f.lexiSize()){
+                flag = 1;
+            }
+            else if(this.lexiSize() < f.lexiSize()){
+                flag = -1;
+            }
+            else {
+                flag = 0;
+            }
+        }
+        return flag;
     }
 
     public String toString() {
