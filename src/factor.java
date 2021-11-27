@@ -1,20 +1,20 @@
 import java.util.*;
 
 public class factor  implements Comparable<factor>{
-    String name;
+//    String name;
     ArrayList<HashMap<String, String>> factor = new ArrayList<HashMap<String, String>>();
     ArrayList<String> evidence = new ArrayList<>();
 
     // new factor to build
-    public factor(String name){
-        this.name = name;
+    public factor(){
+//        this.name = name;
         this.factor = new ArrayList<HashMap<String, String>>();
         this.evidence = new ArrayList<>(evidence);
     }
 
     // initial factor
-    public factor(String name, ArrayList<HashMap<String, String>> cpt, String[] evidence){
-        this.name = name;
+    public factor(ArrayList<HashMap<String, String>> cpt, String[] evidence){
+//        this.name = name;
         for(int i = 0; i < cpt.size(); i++){
             this.factor.add(hashMapCopy(cpt.get(i)));
         }
@@ -25,7 +25,7 @@ public class factor  implements Comparable<factor>{
 
     // copy
     public factor(factor other){
-        this.name = other.name;
+//        this.name = other.name;
         for(int i = 0; i < other.factor.size(); i++){
             this.factor.add(hashMapCopy(other.factor.get(i)));
         }
@@ -108,8 +108,6 @@ public class factor  implements Comparable<factor>{
     }
 
     public String toString() {
-        return "name='" + name + '\'' +
-                ", factor=" + factor +
-                ", evidence=" + evidence + "\n";
+        return "factor=" + factor + ", evidence=" + evidence + "\n";
     }
 }

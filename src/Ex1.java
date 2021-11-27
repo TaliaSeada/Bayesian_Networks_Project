@@ -17,7 +17,8 @@ public class Ex1 {
 //        System.out.println(BN._bayesianNetwork.get(node).getCPT());
 //        String[] ev = {"B=T"};
 ////        String[] ev = {"C2=v1","C1=T"};
-//        factor f = new factor(BN._bayesianNetwork.get(node).getName(), BN._bayesianNetwork.get(node).getCPT(), ev);
+//        factor f = new factor(BN._bayesianNetwork.get(node).getCPT(), ev);
+//        System.out.println(f.factor.get(0));
 //        f.removeIrrelevantRows();
 //        System.out.println(f.factor);
 
@@ -26,10 +27,24 @@ public class Ex1 {
 //        boolean an = isAncestor(hidden,query);
 //        System.out.println(an);
 
-//        String q = "B0=v3";
-//        String[] h = {"A2", "D1", "B3", "C1", "A1", "B1", "A3"};
+//        String q = "A2=T";
+//        String[] h = {"D1", "B3", "C1", "B0", "A1", "B1", "A3"};
 //        String[] e = {"C3=T", "B2=F", "C2=v3"};
 //        variableElimination ve = new variableElimination(q, h, e, BN);
+//        System.out.println(ve.factors);
+//        System.out.println(ve.factors.get(0));
+//        System.out.println(ve.factors.get(4));
+//        factor n = ve.join(ve.factors.get(0), ve.factors.get(4), BN.returnByName("A1"));
+//        System.out.println(n);
+
+        String q = "B=T";
+        String[] h = {"A", "E"};
+        String[] e = {"J=T", "M=T"};
+        variableElimination ve = new variableElimination(q, h, e, BN);
+        System.out.println(ve.factors.get(2));
+        System.out.println(ve.factors.get(3));
+        factor n = ve.join(ve.factors.get(2), ve.factors.get(3), BN.returnByName("A"));
+        System.out.println(n);
 
 
     }
