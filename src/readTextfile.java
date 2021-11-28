@@ -7,9 +7,6 @@ import java.util.Arrays;
  * this class reads the TEXT files
  */
 public class readTextfile {
-    private final String ALARM = "src/alarm_net.xml";
-    private final String BIG = "src/big_net.xml";
-
     private File path;
     private BufferedReader br;
     bayesianNetwork BN = new bayesianNetwork();
@@ -60,8 +57,7 @@ public class readTextfile {
                 String[] evi = given_split[1].split(",");
 //                System.out.println("evi:" + Arrays.toString(evi));
                 variableElimination ve = new variableElimination(query, hidden, evi, BN);
-
-                ans += "implement :/\n";
+                ans += ve.variableElimination();
             }
             else {
                 String[] given_split = lines.get(i).split("\\|");

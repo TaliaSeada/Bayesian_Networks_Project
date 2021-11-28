@@ -25,7 +25,7 @@ public class variableElimination {
         //init factors:
         generateFactors();
         removeOneSize();
-        sort();
+        sort(this.factors);
 //        System.out.println(factors);
     }
 
@@ -55,6 +55,7 @@ public class variableElimination {
             }
         }
     }
+
     /*
         this function returns an arraylist of the irrelevant nodes
         a node is irrelevant if
@@ -107,14 +108,24 @@ public class variableElimination {
     }
 
     // sort the factors by the implementations of compareTo in the factor class
-    public void sort() {
+    public void sort(ArrayList<factor> factors) {
         Collections.sort(factors);
     }
 
     // this function checks if the answer is one of the cells in the query factor
-//    public boolean answerInFactor(){
-//
-//    }
+    public boolean answerInFactor(bayesianNode query) {
+        for (int i = 0; i < this.hidden.size(); i++) {
+            if (query.getParents().contains(hidden.get(i))) {
+                return false;
+            }
+        }
+        for (int i = 0; i < this.evidence.size(); i++) {
+            if (!query.getParents().contains(evidence.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     // this function join two factors to one, it joins the lines by the given hidden node
     public factor join(factor a, factor b, bayesianNode hid) {
@@ -194,6 +205,7 @@ public class variableElimination {
         }
         return a;
     }
+
     private boolean isEqual(HashMap<String, String> row1, Object[] i_iter, HashMap<String, String> row2, Object[] j_iter) {
         boolean res = true;
         int i = 0;
@@ -220,31 +232,82 @@ public class variableElimination {
         return res;
     }
 
-    public factor normalize(factor a){
+    public factor normalize(factor a) {
         double p = 0;
-        for(int i = 0; i < a.factor.size(); i++){
-            for(String key: a.factor.get(i).keySet()){
-                if(key.equals("P")){
+        for (int i = 0; i < a.factor.size(); i++) {
+            for (String key : a.factor.get(i).keySet()) {
+                if (key.equals("P")) {
                     p += Double.parseDouble(a.factor.get(i).get("P"));
                 }
             }
         }
-        for(int i = 0; i < a.factor.size(); i++){
-            for(String key: a.factor.get(i).keySet()){
-                if(key.equals("P")){
-                    a.factor.get(i).put("P", String.valueOf(Double.parseDouble(a.factor.get(i).get("P"))/p));
+        for (int i = 0; i < a.factor.size(); i++) {
+            for (String key : a.factor.get(i).keySet()) {
+                if (key.equals("P")) {
+                    a.factor.get(i).put("P", String.valueOf(Double.parseDouble(a.factor.get(i).get("P")) / p));
                 }
             }
         }
         return a;
     }
 
-//    public void variableElimination(){
-////        // run over the hidden nodes and check for the factors they are in, then join between
-////        for(int i = 0; i < this.hidden.size(); i++){
-////            bayesianNode hid = this.hidden.get(i);
-////
-////        }
-//    }
+    /*
+        In this function we will implement the variable elimination algorithm
+        first we will check if the factor already have the answer in it - if so we will return the answer
+        else, we will iterate over the hidden nodes and start the elimination, step by step
+        the first step will be to search the factors that contains the hidden node
+        then join the factors that have the hidden node in them, we will do it by the size of the factors
+        and until there is only one factor that contains the hidden node
+        then, we will eliminate the node from that factor
+        after we eliminate the hidden node we will normalize the values in the factor
+        then finally we will return the value of the query
+     */
+    public String variableElimination() {
+        // check if the factor already have the answer in it
+//        if(answerInFactor(this.query)){
+//
+//        }
+        ArrayList<factor> hidFactors = new ArrayList<factor>();
+        // iterate over the hidden nodes
+        for (int i = 0; i < this.hidden.size(); i++) {
+            // search the factors that contains the hidden node
+            hidFactors = new ArrayList<factor>();
+            for (int j = 0; j < this.factors.size(); j++) {
+                for (int k = 0; k < this.factors.get(j).factor.size(); k++) {
+                    for (String key : this.factors.get(j).factor.get(k).keySet()) {
+                        // if the factor contains the hidden node
+                        if (key.equals(this.hidden.get(i).getName())) {
+                            // add this factor to the array list
+                            if (!hidFactors.contains(this.factors.get(j))) {
+                                hidFactors.add(this.factors.get(j));
+                            }
+                        }
+                    }
+                }
+            }
+
+            // sort them by their size
+            sort(hidFactors);
+            System.out.println(hidFactors);
+            // join the factors that have the hidden node in them
+            int k = 0;
+            while(hidFactors.size() > 1){
+                factor join = join(hidFactors.get(k), hidFactors.get(k+1), this.hidden.get(i));
+                hidFactors.remove(hidFactors.get(k)); // remove k
+                hidFactors.remove(hidFactors.get(k)); // remove k+1
+                hidFactors.add(join);
+                sort(hidFactors);
+                this.multiply++;
+            }
+            // then, we will eliminate the node from that factor
+            eliminate(hidFactors.get(0), this.hidden.get(i));
+            this.add++;
+            System.out.println(hidFactors);
+
+        }
+
+
+        return "";
+    }
 
 }
