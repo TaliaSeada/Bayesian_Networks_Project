@@ -79,6 +79,19 @@ public class factor  implements Comparable<factor>{
         }
     }
 
+// {"A=T","B=T","C=T","P=0.0001"}
+// {"A=T","B=T","D=T","P=0.09"}
+    public ArrayList<String> getRow(int i){
+        ArrayList<String> res = new ArrayList<String>();
+        for(String key : this.factor.get(i).keySet()){
+            String var = new String();
+            var += key + "=";
+            var += this.factor.get(i).get(key);
+            res.add(var);
+        }
+        return res;
+    }
+
     /*
         this function compare between two factors
         first by the size of their CPT's
@@ -109,5 +122,14 @@ public class factor  implements Comparable<factor>{
 
     public String toString() {
         return "factor=" + factor + ", evidence=" + evidence + "\n";
+    }
+
+    public void removeEvidances() {
+        for (String e : this.evidence){
+            e = e.split("=")[0];
+            for(int i = 0; i < this.factor.size(); i++){
+                this.factor.get(i).remove(e);
+            }
+        }
     }
 }

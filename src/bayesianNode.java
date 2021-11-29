@@ -10,6 +10,7 @@ public class bayesianNode {
     private ArrayList<String> outcomes = new ArrayList<String>();
     private bayesianNetwork BN; //links between the BN to its nodes
     private ArrayList<HashMap<String, String>> cpt;
+    private factor f = new factor();
 
     //basic constructor
     public bayesianNode(String name) {
@@ -125,4 +126,10 @@ public class bayesianNode {
         return this.cpt;
     }
 
+    public void setFactor(factor a){
+        this.f = a;
+    }
+    public factor getFactor(){
+        return this.f;
+    }
 }
