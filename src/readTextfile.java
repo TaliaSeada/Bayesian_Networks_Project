@@ -57,7 +57,7 @@ public class readTextfile {
                 String[] evi = given_split[1].split(",");
 //                System.out.println("evi:" + Arrays.toString(evi));
                 variableElimination ve = new variableElimination(query, hidden, evi, BN);
-                ans += ve.variableElimination();
+                ans += ve.variableElimination() + "\n";
             }
             else {
                 String[] given_split = lines.get(i).split("\\|");

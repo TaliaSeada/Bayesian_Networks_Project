@@ -1,7 +1,10 @@
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class variableElimination {
     bayesianNode query;
+    String str_query;
     ArrayList<bayesianNode> hidden = new ArrayList<bayesianNode>();
     ArrayList<bayesianNode> evidence = new ArrayList<bayesianNode>();
     ArrayList<String> evi = new ArrayList<String>();
@@ -13,6 +16,7 @@ public class variableElimination {
     public variableElimination(String query, String[] hidden, String[] evidence, bayesianNetwork BN) {
         String[] q = query.split("=");
         this.query = BN.returnByName(q[0]);
+        this.str_query = query;
         for (int i = 0; i < hidden.length; i++) {
             this.hidden.add(BN.returnByName(hidden[i]));
         }
@@ -131,7 +135,7 @@ public class variableElimination {
     }
 
     // this function join two factors to one, it joins the lines by the given hidden node
-    public factor join2(factor a, factor b) {
+    public factor join(factor a, factor b) {
         ArrayList<String> commonVars = getCommonVars(a, b);
         factor res = new factor();
         HashMap<String, String> new_row;
@@ -156,7 +160,6 @@ public class variableElimination {
         }
         return res;
     }
-
     private HashMap<String, String> get_new_row(HashMap<String, String> a_row, HashMap<String, String> b_row, ArrayList<String> commonVars) {
         HashMap<String, String> row = new HashMap<>();
         for (String key : a_row.keySet()) {
@@ -167,10 +170,10 @@ public class variableElimination {
                 row.put(key, b_row.get(key));
         }
         double p = Double.parseDouble(a_row.get("P")) * Double.parseDouble(b_row.get("P"));
+        this.multiply++;
         row.put("P", String.valueOf(p));
         return row;
     }
-
     private ArrayList<String> getCommonVars(factor a, factor b) {
         ArrayList<String> common = new ArrayList<String>();
         for (String key : a.factor.get(0).keySet()) {
@@ -181,63 +184,7 @@ public class variableElimination {
         return common;
     }
 
-
-    // this function join two factors to one, it joins the lines by the given hidden node
-    public factor join(factor a, factor b) {
-        ArrayList<String> commonVars = getCommonVars(a, b);
-        // the bigger should be first, so we won't miss lines
-        if (a.factor.size() < b.factor.size()) {
-            factor tmp = a;
-            a = b;
-            b = tmp;
-        }
-
-        factor res = new factor();
-        HashMap<String, String> ln = new HashMap<String, String>();
-        double p = 0;
-        for (int i = 0; i < a.factor.size(); i++) {
-            Iterator<String> iter_a = a.factor.get(i).values().iterator();
-
-
-            for (String a_key : a.factor.get(i).keySet()) {
-                String a_val = iter_a.next();
-                if (!a_key.equals("P")) {
-                    for (int j = 0; j < b.factor.size(); j++) {
-                        Iterator<String> iter_b = b.factor.get(j).values().iterator();
-                        for (String b_key : b.factor.get(j).keySet()) {
-                            String b_val = iter_b.next();
-                            if (!b_key.equals("P")) {
-                                if (a_key.equals(b_key) && a_val.equals(b_val) && a_key.equals(hid.getName())) {
-                                    double a_p = Double.parseDouble(a.factor.get(i).get("P"));
-                                    double b_p = Double.parseDouble(b.factor.get(j).get("P"));
-                                    p = a_p * b_p;
-                                    if (!ln.containsKey("P")) {
-                                        ln.put("P", String.valueOf(p));
-                                    }
-                                    ln.put(a_key, a_val);
-                                }
-
-                                if (!ln.containsKey(b_key)) {
-                                    ln.put(b_key, b_val);
-                                }
-                                if (!ln.containsKey(a_key)) {
-                                    ln.put(a_key, a_val);
-                                }
-                            }
-
-                        }
-
-                    }
-                }
-
-            }
-            res.factor.add(ln);
-            ln = new HashMap<String, String>();
-        }
-        res.evidence = a.evidence;
-        return res;
-    }
-
+    // this function eliminate the hidden node from a given factor
     public factor eliminate(factor a, bayesianNode hid) {
         double p = 0;
         // run over the rows of the factor
@@ -255,6 +202,7 @@ public class variableElimination {
                 HashMap<String, String> row2 = a.factor.get(j);
                 if (isEqual(row1, i_iter, row2, j_iter)) {
                     p = Double.parseDouble(a.factor.get(i).get("P")) + Double.parseDouble(a.factor.get(j).get("P"));
+                    this.add++;
 //                    System.out.println(p);
                     a.factor.get(i).put("P", String.valueOf(p));
                     a.factor.remove(j--);
@@ -263,7 +211,6 @@ public class variableElimination {
         }
         return a;
     }
-
     private boolean isEqual(HashMap<String, String> row1, Object[] i_iter, HashMap<String, String> row2, Object[] j_iter) {
         boolean res = true;
         int i = 0;
@@ -290,6 +237,7 @@ public class variableElimination {
         return res;
     }
 
+    //this function normalize the values in a given factor
     public factor normalize(factor a) {
         double p = 0;
         for (int i = 0; i < a.factor.size(); i++) {
@@ -302,7 +250,10 @@ public class variableElimination {
         for (int i = 0; i < a.factor.size(); i++) {
             for (String key : a.factor.get(i).keySet()) {
                 if (key.equals("P")) {
-                    a.factor.get(i).put("P", String.valueOf(Double.parseDouble(a.factor.get(i).get("P")) / p));
+                    double prob = Double.parseDouble(a.factor.get(i).get("P")) / p;
+                    NumberFormat formatter = new DecimalFormat("#0.00000");
+                    String ans1=formatter.format(prob);
+                    a.factor.get(i).put("P", String.valueOf(ans1));
                 }
             }
         }
@@ -321,11 +272,19 @@ public class variableElimination {
         then finally we will return the value of the query
      */
     public String variableElimination() {
-//        System.out.println(this.factors);
-        // check if the factor already have the answer in it
-//        if(answerInFactor(this.query)){
-//
-//        }
+        // check if the query factor already have the answer in it
+        String[] q = this.str_query.split("=");
+        if(answerInFactor(this.query)){
+            for(int i = 0; i < this.query.getFactor().factor.size(); i++){
+                for(String key : this.query.getFactor().factor.get(i).keySet()){
+                    if(key.equals(q[0]) && this.query.getFactor().factor.get(i).get(key).equals(q[1])){
+                        // if the answer is in return the value
+                        return this.query.getFactor().factor.get(i).get("P");
+                    }
+                }
+            }
+        }
+        // else, if the answer is not in the query factor:
         ArrayList<factor> hidFactors = new ArrayList<factor>();
         // iterate over the hidden nodes
         for (int i = 0; i < this.hidden.size(); i++) {
@@ -351,7 +310,7 @@ public class variableElimination {
             // join the factors that have the hidden node in them
             int k = 0;
             while (hidFactors.size() > 1) {
-                factor join = join2(hidFactors.get(k), hidFactors.get(k + 1));
+                factor join = join(hidFactors.get(k), hidFactors.get(k + 1));
                 for (int t = 0; t < this.factors.size(); t++) {
                     if (this.factors.get(t).equals(hidFactors.get(k))) {
                         this.factors.remove(t--); // remove k from factor list
@@ -373,7 +332,6 @@ public class variableElimination {
             }
             // then, we will eliminate the node from that factor
             if (hidFactors.size() != 0) {
-//                System.out.println("before" + this.factors);
                 factor elim = eliminate(hidFactors.get(0), this.hidden.get(i));
                 for (int t = 0; t < this.factors.size(); t++) {
                     if (this.factors.get(t).equals(hidFactors.get(0))) {
@@ -383,28 +341,34 @@ public class variableElimination {
                 hidFactors.remove(0);
                 this.factors.add(elim);
                 hidFactors.add(elim);
-//                System.out.println("after" + this.factors);
             }
 //            System.out.println(hidFactors);
         }
         //join the query
-        System.out.println("after" + this.factors);
-
-
-//        factor res = new factor();
-//        int k = 0;
-//        while(this.factors.size() > 1){
-//            res = join(this.factors.get(k) ,this.factors.get(k+1), this.query);
-//            this.factors.remove(this.factors.get(k));
-//            this.factors.remove(this.factors.get(k));
-//            this.factors.add(res);
-//            sort(this.factors);
-//        }
+        factor res = new factor();
+        int k = 0;
+        while(this.factors.size() > 1){
+            res = join(this.factors.get(k) ,this.factors.get(k+1));
+            this.factors.remove(this.factors.get(k));
+            this.factors.remove(this.factors.get(k));
+            this.factors.add(res);
+            sort(this.factors);
+        }
 //        System.out.println(this.factors);
-//        // only then normalize
-//        normalize(this.factors.get(0));
+        // only then normalize
+        res = normalize(this.factors.get(0));
 //        System.out.println("res \n"+ res);
-        return "";
+        String answer = "";
+        for(int i = 0; i < res.factor.size(); i++){
+            for(String key : res.factor.get(i).keySet()){
+                if(key.equals(q[0]) && res.factor.get(i).get(key).equals(q[1])){
+                    // if the answer is in return the value
+                    answer = res.factor.get(i).get("P");
+                }
+            }
+        }
+        answer += "," + this.add + "," + this.multiply;
+        return answer;
     }
 
 }
