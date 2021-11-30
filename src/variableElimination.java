@@ -30,7 +30,7 @@ public class variableElimination {
         generateFactors();
         removeOneSize(this.factors);
         sort(this.factors);
-//        System.out.println(factors);
+        System.out.println(factors);
     }
 
     // this function generates the relevant factor for the given question
@@ -76,22 +76,29 @@ public class variableElimination {
         ArrayList<bayesianNode> independents = new ArrayList<bayesianNode>();
 
         for (int i = 0; i < this.hidden.size(); i++) {
+            if (BayesBall.isInd(BN, this.query, this.hidden.get(i), this.evidence).equals("yes")) {
+                independents.add(this.hidden.get(i));
+                continue;
+            }
+
+            if (independents.contains(this.hidden.get(i))) {
+                irrelevant.add(this.hidden.get(i));
+                continue;
+            }
+
             boolean q_ancestor = isAncestor(hidden.get(i), this.query);
             for (int j = 0; j < this.evidence.size(); j++) {
                 if (isAncestor(hidden.get(i), this.evidence.get(j))) {
-                    evi_ancestors.add(this.evidence.get(j));
+                    evi_ancestors.add(this.hidden.get(i));
                 }
             }
-            if (BayesBall.isInd(BN, this.query, this.hidden.get(i), this.evidence).equals("yes")) {
-                independents.add(this.hidden.get(i));
-            }
-            if (!q_ancestor && !evi_ancestors.contains(this.hidden.get(i)) && independents.contains(this.hidden.get(i))) {
+            if (!q_ancestor && !evi_ancestors.contains(this.hidden.get(i))) {
                 irrelevant.add(this.hidden.get(i));
             }
         }
-
         return irrelevant;
     }
+
     // this function checks if a hidden node is an ancestor of a given node
     private boolean isAncestor(bayesianNode hidden, bayesianNode query) {
         if (query.getParents().contains(hidden)) return true;
@@ -159,6 +166,7 @@ public class variableElimination {
         }
         return res;
     }
+
     private HashMap<String, String> get_new_row(HashMap<String, String> a_row, HashMap<String, String> b_row, ArrayList<String> commonVars) {
         HashMap<String, String> row = new HashMap<>();
         for (String key : a_row.keySet()) {
@@ -173,6 +181,7 @@ public class variableElimination {
         row.put("P", String.valueOf(p));
         return row;
     }
+
     private ArrayList<String> getCommonVars(factor a, factor b) {
         ArrayList<String> common = new ArrayList<String>();
         for (String key : a.factor.get(0).keySet()) {
@@ -210,6 +219,7 @@ public class variableElimination {
         }
         return a;
     }
+
     private boolean isEqual(HashMap<String, String> row1, Object[] i_iter, HashMap<String, String> row2, Object[] j_iter) {
         boolean res = true;
         int i = 0;
@@ -252,7 +262,7 @@ public class variableElimination {
                 if (key.equals("P")) {
                     double prob = Double.parseDouble(a.factor.get(i).get("P")) / p;
                     NumberFormat formatter = new DecimalFormat("#0.00000");
-                    String ans1=formatter.format(prob);
+                    String ans1 = formatter.format(prob);
                     a.factor.get(i).put("P", String.valueOf(ans1));
                 }
             }
@@ -275,10 +285,10 @@ public class variableElimination {
     public String variableElimination() {
         // check if the query factor already have the answer in it
         String[] q = this.str_query.split("=");
-        if(answerInFactor(this.query)){
-            for(int i = 0; i < this.query.getFactor().factor.size(); i++){
-                for(String key : this.query.getFactor().factor.get(i).keySet()){
-                    if(key.equals(q[0]) && this.query.getFactor().factor.get(i).get(key).equals(q[1])){
+        if (answerInFactor(this.query)) {
+            for (int i = 0; i < this.query.getFactor().factor.size(); i++) {
+                for (String key : this.query.getFactor().factor.get(i).keySet()) {
+                    if (key.equals(q[0]) && this.query.getFactor().factor.get(i).get(key).equals(q[1])) {
                         // if the answer is in return the value
                         return this.query.getFactor().factor.get(i).get("P");
                     }
@@ -305,6 +315,8 @@ public class variableElimination {
                 }
             }
 
+//            ArrayList<bayesianNode> irrelevant = findIrrelevantNodes();
+//            hidFactors = removeIrrelevantNode(irrelevant, hidFactors);
             // sort them by their size
             sort(hidFactors);
 //            System.out.println(hidFactors);
@@ -356,8 +368,8 @@ public class variableElimination {
         //join the query
         factor res = new factor();
         int k = 0;
-        while(this.factors.size() > 1){
-            res = join(this.factors.get(k) ,this.factors.get(k+1));
+        while (this.factors.size() > 1) {
+            res = join(this.factors.get(k), this.factors.get(k + 1));
             this.factors.remove(this.factors.get(k));
             this.factors.remove(this.factors.get(k));
             this.factors.add(res);
@@ -368,9 +380,9 @@ public class variableElimination {
         // only then normalize
         res = normalize(this.factors.get(0));
         String answer = "";
-        for(int i = 0; i < res.factor.size(); i++){
-            for(String key : res.factor.get(i).keySet()){
-                if(key.equals(q[0]) && res.factor.get(i).get(key).equals(q[1])){
+        for (int i = 0; i < res.factor.size(); i++) {
+            for (String key : res.factor.get(i).keySet()) {
+                if (key.equals(q[0]) && res.factor.get(i).get(key).equals(q[1])) {
                     // if the answer is in return the value
                     answer = res.factor.get(i).get("P");
                 }
