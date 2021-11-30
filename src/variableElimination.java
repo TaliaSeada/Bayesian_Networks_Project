@@ -92,7 +92,6 @@ public class variableElimination {
 
         return irrelevant;
     }
-
     // this function checks if a hidden node is an ancestor of a given node
     private boolean isAncestor(bayesianNode hidden, bayesianNode query) {
         if (query.getParents().contains(hidden)) return true;
@@ -244,6 +243,7 @@ public class variableElimination {
             for (String key : a.factor.get(i).keySet()) {
                 if (key.equals("P")) {
                     p += Double.parseDouble(a.factor.get(i).get("P"));
+                    this.add++;
                 }
             }
         }
@@ -257,6 +257,7 @@ public class variableElimination {
                 }
             }
         }
+        this.add--;
         return a;
     }
 
@@ -327,6 +328,9 @@ public class variableElimination {
                 this.factors.add(join);
                 hidFactors.add(join);
 
+                removeOneSize(this.factors);
+                removeOneSize(hidFactors);
+
                 sort(this.factors);
                 sort(hidFactors);
             }
@@ -341,8 +345,13 @@ public class variableElimination {
                 hidFactors.remove(0);
                 this.factors.add(elim);
                 hidFactors.add(elim);
+
+                removeOneSize(this.factors);
+                removeOneSize(hidFactors);
+
+                sort(this.factors);
+                sort(hidFactors);
             }
-//            System.out.println(hidFactors);
         }
         //join the query
         factor res = new factor();
@@ -352,12 +361,12 @@ public class variableElimination {
             this.factors.remove(this.factors.get(k));
             this.factors.remove(this.factors.get(k));
             this.factors.add(res);
+
+            removeOneSize(this.factors);
             sort(this.factors);
         }
-//        System.out.println(this.factors);
         // only then normalize
         res = normalize(this.factors.get(0));
-//        System.out.println("res \n"+ res);
         String answer = "";
         for(int i = 0; i < res.factor.size(); i++){
             for(String key : res.factor.get(i).keySet()){

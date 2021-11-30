@@ -31,7 +31,7 @@ public class readTextfile {
 
     public String readfile() {
         String ans = "";
-        BN = readXMLfile.read_net("src/" + this.lines.get(0));
+        BN = readXMLfile.read_net(this.lines.get(0));
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).charAt(0) == 'P') {
                 String[] probs = new String[2];
