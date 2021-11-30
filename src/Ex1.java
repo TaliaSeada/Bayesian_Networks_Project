@@ -4,7 +4,7 @@ import java.io.IOException;
 public class Ex1 {
 
     public static void main(String[] args) {
-        String path = "input.txt";
+        String path = "input2.txt";
         readTextfile reader = new readTextfile(path);
         String s = reader.readfile();
         System.out.println(s);

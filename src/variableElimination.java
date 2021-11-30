@@ -76,17 +76,14 @@ public class variableElimination {
         ArrayList<bayesianNode> independents = new ArrayList<bayesianNode>();
 
         for (int i = 0; i < this.hidden.size(); i++) {
+            // if the hidden node is independent the query - its irrelevant
             if (BayesBall.isInd(BN, this.query, this.hidden.get(i), this.evidence).equals("yes")) {
-                independents.add(this.hidden.get(i));
-                continue;
-            }
-
-            if (independents.contains(this.hidden.get(i))) {
                 irrelevant.add(this.hidden.get(i));
                 continue;
             }
-
+            // if it is dependent, check if it is an ancestor of the query or of one of the evidences
             boolean q_ancestor = isAncestor(hidden.get(i), this.query);
+
             for (int j = 0; j < this.evidence.size(); j++) {
                 if (isAncestor(hidden.get(i), this.evidence.get(j))) {
                     evi_ancestors.add(this.hidden.get(i));
@@ -101,7 +98,10 @@ public class variableElimination {
 
     // this function checks if a hidden node is an ancestor of a given node
     private boolean isAncestor(bayesianNode hidden, bayesianNode query) {
-        if (query.getParents().contains(hidden)) return true;
+        for(int i = 0; i < query.getParents().size(); i++){
+            if(hidden.getName().equals(query.getParents().get(i).getName())) return true;
+        }
+
         boolean flag = false;
         for (int i = 0; i < query.getParents().size(); i++) {
             flag = isAncestor(hidden, query.getParents().get(i));
