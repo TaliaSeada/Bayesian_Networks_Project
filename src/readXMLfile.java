@@ -86,6 +86,7 @@ public class readXMLfile {
         } catch (SAXException e) {
             e.printStackTrace();
         }
+        // if there are incorrect nodes - fix them
         BN.fixNet();
         //build CPT:
         for(int i = 0; i < BN._bayesianNetwork.size(); i++){

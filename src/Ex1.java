@@ -4,10 +4,11 @@ import java.io.IOException;
 public class Ex1 {
 
     public static void main(String[] args) {
-        String path = "input2.txt";
+        // read this file then write the output to another file
+        String path = "input.txt";
         readTextfile reader = new readTextfile(path);
         String s = reader.readfile();
-        System.out.println(s);
+//        System.out.println(s);
         writeToFile(s);
     }
 

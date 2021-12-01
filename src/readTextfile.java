@@ -14,6 +14,7 @@ public class readTextfile {
 
     //constructor
     public readTextfile(String path) {
+        // read the file from the given path
         this.path = new File(path);
         String line = "";
         try {
@@ -34,6 +35,7 @@ public class readTextfile {
         BN = readXMLfile.read_net(this.lines.get(0));
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).charAt(0) == 'P') {
+                // create the relevant variables for the Variable Elimination algorithm
                 String[] probs = new String[2];
                 String[] hiddens = new String[2];
                 String[] eliminate_split = lines.get(i).split(" ");
@@ -45,10 +47,12 @@ public class readTextfile {
                 String[] given_split = probs[0].split("\\|");
                 String query = given_split[0];
                 String[] evi = given_split[1].split(",");
+                // create a variable elimination variable
                 variableElimination ve = new variableElimination(query, hidden, evi, BN);
-                ans += ve.variableElimination() + "\n";
+                ans += ve.variableElimination() + "\n"; // then call the variable elimination function
             }
             else {
+                // create the relevant variables for the Bayes Ball algorithm
                 String[] given_split = lines.get(i).split("\\|");
                 String[] query = given_split[0].split("-");
                 ArrayList<bayesianNode> evidence = new ArrayList<>();
@@ -62,7 +66,7 @@ public class readTextfile {
                 }
                 bayesianNode src = BN.returnByName(query[0]);
                 bayesianNode dest = BN.returnByName(query[1]);
-
+                // then call the Bayes Ball (called in the isInd function) function
                 ans += BayesBall.isInd(BN, src, dest, evidence) + "\n";
             }
         }

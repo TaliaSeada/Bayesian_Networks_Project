@@ -1,20 +1,20 @@
 import java.util.*;
 
+/**
+ * this class represents a factor of a Node
+ */
 public class factor  implements Comparable<factor>{
-//    String name;
     ArrayList<HashMap<String, String>> factor = new ArrayList<HashMap<String, String>>();
     ArrayList<String> evidence = new ArrayList<>();
 
     // new factor to build
     public factor(){
-//        this.name = name;
         this.factor = new ArrayList<HashMap<String, String>>();
         this.evidence = new ArrayList<>(evidence);
     }
 
     // initial factor
     public factor(ArrayList<HashMap<String, String>> cpt, String[] evidence){
-//        this.name = name;
         for(int i = 0; i < cpt.size(); i++){
             this.factor.add(hashMapCopy(cpt.get(i)));
         }
@@ -25,7 +25,6 @@ public class factor  implements Comparable<factor>{
 
     // copy
     public factor(factor other){
-//        this.name = other.name;
         for(int i = 0; i < other.factor.size(); i++){
             this.factor.add(hashMapCopy(other.factor.get(i)));
         }
@@ -34,6 +33,7 @@ public class factor  implements Comparable<factor>{
         }
     }
 
+    // this function do a deep copy to a given hashMap
     private HashMap hashMapCopy(HashMap line){
         HashMap res = new HashMap();
         for(int i = 0; i < line.size(); i++){
@@ -47,7 +47,7 @@ public class factor  implements Comparable<factor>{
         int ascii = 0;
         for(String key : this.factor.get(0).keySet()){
             for(int i = 0; i < key.length(); i++){
-                ascii += key.charAt(i);
+                ascii += key.charAt(i); //the ascii variable is int type, so charAt automatically become an int value
             }
         }
         return ascii;
@@ -55,7 +55,10 @@ public class factor  implements Comparable<factor>{
 
     // this function removes the irrelevant rows out of the factor
     public void removeIrrelevantRows() {
-        // iterate over the columns and check every line, and take only the ones that are givens
+        /*
+            first create an array list of the evidences
+            split the string by "=" then take the "key" and its "value" and add them one after the other to the list
+         */
         ArrayList<String> evi = new ArrayList<>();
         for(int i = 0; i < this.evidence.size(); i++){
             String[] e = this.evidence.get(i).split("=");
@@ -63,11 +66,13 @@ public class factor  implements Comparable<factor>{
                 evi.add(e[j]);
             }
         }
+        // iterate over the columns and check every line, and take only the ones that are the same as given (by name and value)
         for(int i = 0; i < this.factor.size(); i++) {
             int val = 0;
             for (String key : this.factor.get(i).keySet()) {
                 if(!key.equals("P")) {
                     for (int j = 0; j < evi.size()-1; j++) {
+                        // i is the name, i+1 is the value
                         if (evi.get(j).equals(key) && !evi.get(j+1).equals(this.factor.get(i).values().toArray()[val])) {
                             this.factor.remove(i);
                             if(i > 0) i--;
@@ -111,6 +116,7 @@ public class factor  implements Comparable<factor>{
         return "factor=" + factor + ", evidence=" + evidence + "\n";
     }
 
+    // this function removes the evidence from the CPT's after we used it
     public void removeEvidances() {
         for (String e : this.evidence){
             e = e.split("=")[0];

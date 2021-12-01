@@ -2,6 +2,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 
+/**
+ * this class represents the Variable Elimination algorithm
+ */
 public class variableElimination {
     bayesianNode query;
     String str_query;
@@ -13,6 +16,7 @@ public class variableElimination {
     int multiply = 0;
     int add = 0;
 
+    // this constructor build the relevant factors to a given query
     public variableElimination(String query, String[] hidden, String[] evidence, bayesianNetwork BN) {
         String[] q = query.split("=");
         this.query = BN.returnByName(q[0]);
@@ -27,16 +31,15 @@ public class variableElimination {
         }
         this.BN = BN;
         //init factors:
-        generateFactors();
-        removeOneSize(this.factors);
-        sort(this.factors);
-        System.out.println(factors);
+        generateFactors(); // init function
+        removeOneSize(this.factors); // remove factors with only one row in them
+        sort(this.factors); // sort the factors by their size, if equal sort by ascii value
     }
 
     // this function generates the relevant factor for the given question
     private void generateFactors() {
-        ArrayList<bayesianNode> irrelevant = findIrrelevantNodes();
-        // remove the factors that the irrelevant nodes are in
+        ArrayList<bayesianNode> irrelevant = findIrrelevantNodes(); // find the irrelevant nodes
+        // remove the factors that the irrelevant nodes are in - we don't need them
         for (int i = 0; i < BN._bayesianNetwork.size(); i++) {
             for (int j = 0; j < BN._bayesianNetwork.get(i).getCPT().size(); j++) {
                 for (String key : BN._bayesianNetwork.get(i).getCPT().get(j).keySet()) {
@@ -54,13 +57,12 @@ public class variableElimination {
                     e[j] = this.evi.get(j);
                 }
                 factor f = new factor(BN._bayesianNetwork.get(i).getCPT(), e);
-                f.removeIrrelevantRows();
-                f.removeEvidances();
-                BN._bayesianNetwork.get(i).setFactor(f);
-                this.factors.add(f);
+                f.removeIrrelevantRows(); // remove the irrelevant rows from a factor
+                f.removeEvidances(); // remove the evidences from a factor
+                BN._bayesianNetwork.get(i).setFactor(f); // add the factor we build to the relevant node
+                this.factors.add(f); // then finally add the factor to the list of the factors
             }
         }
-//        System.out.println(this.factors);
     }
 
     /*
@@ -127,61 +129,75 @@ public class variableElimination {
 
     // this function checks if the answer is one of the cells in the query factor
     public boolean answerInFactor(bayesianNode query) {
+        // if the hidden node is in the parent list
         for (int i = 0; i < this.hidden.size(); i++) {
             if (query.getParents().contains(hidden.get(i))) {
-                return false;
+                return false; // we need to eliminate it - then the query's factor don't hold the answer
             }
         }
+        // if the evidence is NOT on the query parents list
         for (int i = 0; i < this.evidence.size(); i++) {
             if (!query.getParents().contains(evidence.get(i))) {
-                return false;
+                return false; // we need to change the query's factor
             }
         }
-        return true;
+        return true; // else the answer is already in the query's factor
     }
 
     // this function join two factors to one, it joins the lines by the given hidden node
     public factor join(factor a, factor b) {
-        ArrayList<String> commonVars = getCommonVars(a, b);
+        ArrayList<String> commonVars = getCommonVars(a, b); // first we will get the common variables in the two given factors
         factor res = new factor();
         HashMap<String, String> new_row;
+        // run over a_factor
         for (int i = 0; i < a.factor.size(); i++) {
+            // get the common variable and put them in a hash table
             Hashtable a_row_common_vars = new Hashtable();
             for (String name : commonVars) {
                 a_row_common_vars.put(name, a.factor.get(i).get(name));
             }
+            // then run over b_factor
             for (int j = 0; j < b.factor.size(); j++) {
                 boolean flag = true;
                 for (String key : commonVars) {
+                    // if the key in b is NOT in the common variables list - the flag will be false, and we will stop this iteration
                     if (!b.factor.get(j).get(key).equals(a_row_common_vars.get(key))) {
                         flag = false;
                         break;
                     }
                 }
+                // else if the flag is true the key is in the common values
                 if (flag) {
-                    new_row = get_new_row(a.factor.get(i), b.factor.get(j), commonVars);
-                    res.factor.add(new_row);
+                    new_row = get_new_row(a.factor.get(i), b.factor.get(j), commonVars); // we multiply the two rows (help function)
+                    res.factor.add(new_row); // then add it to the result factor
                 }
             }
         }
         return res;
     }
 
+    /*
+        this function actually make the multiply action for the join function
+        it looks for the common variables and by them make the multiply action
+     */
     private HashMap<String, String> get_new_row(HashMap<String, String> a_row, HashMap<String, String> b_row, ArrayList<String> commonVars) {
         HashMap<String, String> row = new HashMap<>();
+        // add all of a_factor rows to the result factor
         for (String key : a_row.keySet()) {
             row.put(key, a_row.get(key));
         }
+        // then add all of b_factor rows that are not common to the a_factor rows (prevent multiplication)
         for (String key : b_row.keySet()) {
             if (!commonVars.contains(key))
                 row.put(key, b_row.get(key));
         }
+
         double p = Double.parseDouble(a_row.get("P")) * Double.parseDouble(b_row.get("P"));
-        this.multiply++;
-        row.put("P", String.valueOf(p));
+        this.multiply++; // increase the counter of the multiplication
+        row.put("P", String.valueOf(p)); // create the row that contains the result of the multiplication
         return row;
     }
-
+    // this function compare between two factors and returns the common variables in them
     private ArrayList<String> getCommonVars(factor a, factor b) {
         ArrayList<String> common = new ArrayList<String>();
         for (String key : a.factor.get(0).keySet()) {
@@ -210,8 +226,7 @@ public class variableElimination {
                 HashMap<String, String> row2 = a.factor.get(j);
                 if (isEqual(row1, i_iter, row2, j_iter)) {
                     p = Double.parseDouble(a.factor.get(i).get("P")) + Double.parseDouble(a.factor.get(j).get("P"));
-                    this.add++;
-//                    System.out.println(p);
+                    this.add++; // increase the counter of the adaption
                     a.factor.get(i).put("P", String.valueOf(p));
                     a.factor.remove(j--);
                 }
@@ -219,10 +234,11 @@ public class variableElimination {
         }
         return a;
     }
-
+    //this function is a help function of the eliminate function, it compares two given rows
     private boolean isEqual(HashMap<String, String> row1, Object[] i_iter, HashMap<String, String> row2, Object[] j_iter) {
-        boolean res = true;
+        boolean res = true; // result is true
         int i = 0;
+        // run over row1
         for (String key1 : row1.keySet()) {
             Object i_val = i_iter[i];
             if (key1.equals("P")) {
@@ -230,12 +246,14 @@ public class variableElimination {
                 continue;
             }
             int j = 0;
+            // run over row2
             for (String key2 : row2.keySet()) {
                 Object j_val = j_iter[j];
                 if (key2.equals("P")) {
                     j++;
                     continue;
                 }
+                // their key and values are NOT equal the result will be false
                 if (key1.equals(key2) && !i_val.equals(j_val)) {
                     res = false;
                 }
@@ -243,20 +261,23 @@ public class variableElimination {
             }
             i++;
         }
+        // if it passed all the keys and didn't change the result will be true
         return res;
     }
 
     //this function normalize the values in a given factor
     public factor normalize(factor a) {
         double p = 0;
+        // sum all values
         for (int i = 0; i < a.factor.size(); i++) {
             for (String key : a.factor.get(i).keySet()) {
                 if (key.equals("P")) {
                     p += Double.parseDouble(a.factor.get(i).get("P"));
-                    this.add++;
+                    this.add++; // for each sum action increase the adaption counter
                 }
             }
         }
+        // then divide all values by that summation (to get the final sum to be equal 1)
         for (int i = 0; i < a.factor.size(); i++) {
             for (String key : a.factor.get(i).keySet()) {
                 if (key.equals("P")) {
@@ -267,20 +288,21 @@ public class variableElimination {
                 }
             }
         }
-        this.add--;
+        this.add--; // we counted one more for the last iteration (1+2+3 - will be 2 add action)
         return a;
     }
 
-    /*
-        In this function we will implement the variable elimination algorithm
+    /**
+        In this function we will implement the variable elimination algorithm.
         first we will check if the factor already have the answer in it - if so we will return the answer
         else, we will iterate over the hidden nodes and start the elimination, step by step
         the first step will be to search the factors that contains the hidden node
         then join the factors that have the hidden node in them, we will do it by the size of the factors
         and until there is only one factor that contains the hidden node
         then, we will eliminate the node from that factor
-        after we eliminate the hidden node we will normalize the values in the factor
-        then finally we will return the value of the query
+        after we eliminate the hidden node we will join the query
+        and normalize the values in the factor
+        then finally we will return the value of the query from the final factor
      */
     public String variableElimination() {
         // check if the query factor already have the answer in it
@@ -314,12 +336,8 @@ public class variableElimination {
                     }
                 }
             }
-
-//            ArrayList<bayesianNode> irrelevant = findIrrelevantNodes();
-//            hidFactors = removeIrrelevantNode(irrelevant, hidFactors);
             // sort them by their size
             sort(hidFactors);
-//            System.out.println(hidFactors);
             // join the factors that have the hidden node in them
             int k = 0;
             while (hidFactors.size() > 1) {
@@ -388,7 +406,7 @@ public class variableElimination {
                 }
             }
         }
-        answer += "," + this.add + "," + this.multiply;
+        answer += "," + this.add + "," + this.multiply; // add the counters to the final answer
         return answer;
     }
 

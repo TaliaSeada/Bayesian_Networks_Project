@@ -3,6 +3,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Set;
 
+/**
+ * this class represents the Bayesian Network Node
+ */
 public class bayesianNode {
     private String name;
     private ArrayList<bayesianNode> parents = new ArrayList<bayesianNode>();
@@ -38,6 +41,13 @@ public class bayesianNode {
         }
     }
 
+    /**
+     * this constructor gets its information from the xml file
+     * @param name - the name of the node
+     * @param parents - the givens nodes
+     * @param BN - the network we build
+     * @param outcomes - list of possible result (True, False, ect.)
+     */
     //read from xml file constructor
     public bayesianNode(String name, ArrayList<String> parents, bayesianNetwork BN, ArrayList<String> outcomes) {
         this.name = name;
@@ -56,20 +66,44 @@ public class bayesianNode {
         for (int i = 0; i < outcomes.size(); i++) {
             this.outcomes.add(outcomes.get(i));
         }
+        // initial the cpt array list
         this.cpt = new ArrayList<HashMap<String, String>>();
     }
 
+    /**
+     * this function builds the cpt
+     * the function calls to a help function that creates a row by sending it the index in the table and the value of it in the table
+     * then it add the result of the help function to the general cpt (it returns one row)
+     * @param table - list of the values for the cpt
+     */
     public void build(String[] table) {
         for (int i = 0; i < table.length; i++) {
             this.cpt.add(cpt(table[i], i));
         }
 
     }
+
+    /**
+     * this function is a help function that actually builds the cpt
+     * first it runs over the outcomes of the bayesian node then puts the value of the outcome in the cpt
+     * then we run over the bayesian node's parents to add them to the cpt
+     * so, we run over each parent outcomes and take the relevant outcome using the given index,
+     * the calculation is:
+     * 1. the given index / the amount of outcomes of the current parent (the amount of outcomes grows by the next parent outcomes)
+     * 2. we do it in a cycle (the outcomes list length only contains the possible outcome - and we have more cases so, we always go back to the start)
+     * 3. then we increase the amount of values we have
+     * 4. then at last we add the key and the value to the current row
+     * at the end we add the relevant probability to the row
+     * @param prob - the value of probability we got from the table
+     * @param index - the index of the given value of probability in the table
+     * @return - the row we created
+     */
     private HashMap cpt(String prob, int index) {
-        HashMap ln = new HashMap();
-        String value = new String();
+        HashMap ln = new HashMap(); // new row
+        String value = new String(); // outcome
         int amountOfValues = outcomes.size();
         for(int i = 0; i < outcomes.size(); i++){
+            // run over the outcomes in a cycle
             value = this.outcomes.get((int) (index) % amountOfValues);
             ln.put(this.name, value);
         }
@@ -79,7 +113,6 @@ public class bayesianNode {
             ln.put(this.parents.get(i).getName(), value);
         }
         ln.put("P",prob);
-//        System.out.println(ln);
         return ln;
     }
 
@@ -98,7 +131,7 @@ public class bayesianNode {
         return res;
     }
 
-    //getters
+    //getters and setters
     public String getName() {
         return name;
     }
