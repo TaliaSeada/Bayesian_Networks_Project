@@ -311,7 +311,8 @@ public class variableElimination {
             for (int i = 0; i < this.query.getFactor().factor.size(); i++) {
                 for (String key : this.query.getFactor().factor.get(i).keySet()) {
                     if (key.equals(q[0]) && this.query.getFactor().factor.get(i).get(key).equals(q[1])) {
-                        // if the answer is in return the value
+                        // if the answer is in retur
+                        // n the value
                         return this.query.getFactor().factor.get(i).get("P");
                     }
                 }
@@ -319,69 +320,73 @@ public class variableElimination {
         }
         // else, if the answer is not in the query factor:
         ArrayList<factor> hidFactors = new ArrayList<factor>();
-        // iterate over the hidden nodes
-        for (int i = 0; i < this.hidden.size(); i++) {
-            // search the factors that contains the hidden node
-            hidFactors = new ArrayList<factor>();
-            for (int j = 0; j < this.factors.size(); j++) {
-                for (int k = 0; k < this.factors.get(j).factor.size(); k++) {
-                    for (String key : this.factors.get(j).factor.get(k).keySet()) {
-                        // if the factor contains the hidden node
-                        if (key.equals(this.hidden.get(i).getName())) {
-                            // add this factor to the array list
-                            if (!hidFactors.contains(this.factors.get(j))) {
-                                hidFactors.add(this.factors.get(j));
+        try {
+            // iterate over the hidden nodes
+            for (int i = 0; i < this.hidden.size(); i++) {
+                // search the factors that contains the hidden node
+                hidFactors = new ArrayList<factor>();
+                for (int j = 0; j < this.factors.size(); j++) {
+                    for (int k = 0; k < this.factors.get(j).factor.size(); k++) {
+                        for (String key : this.factors.get(j).factor.get(k).keySet()) {
+                            // if the factor contains the hidden node
+                            if (key.equals(this.hidden.get(i).getName())) {
+                                // add this factor to the array list
+                                if (!hidFactors.contains(this.factors.get(j))) {
+                                    hidFactors.add(this.factors.get(j));
+                                }
                             }
                         }
                     }
                 }
-            }
-            // sort them by their size
-            sort(hidFactors);
-            // join the factors that have the hidden node in them
-            int k = 0;
-            while (hidFactors.size() > 1) {
-                factor join = join(hidFactors.get(k), hidFactors.get(k + 1));
-                for (int t = 0; t < this.factors.size(); t++) {
-                    if (this.factors.get(t).equals(hidFactors.get(k))) {
-                        this.factors.remove(t--); // remove k from factor list
-                    }
-                }
-                hidFactors.remove(hidFactors.get(k)); // remove k
-                for (int t = 0; t < this.factors.size(); t++) {
-                    if (this.factors.get(t).equals(hidFactors.get(k))) {
-                        this.factors.remove(t--); // remove k+1 from factor list
-                    }
-                }
-                hidFactors.remove(hidFactors.get(k)); // remove k+1
-
-                this.factors.add(join);
-                hidFactors.add(join);
-
-                removeOneSize(this.factors);
-                removeOneSize(hidFactors);
-
-                sort(this.factors);
+                // sort them by their size
                 sort(hidFactors);
-            }
-            // then, we will eliminate the node from that factor
-            if (hidFactors.size() != 0) {
-                factor elim = eliminate(hidFactors.get(0), this.hidden.get(i));
-                for (int t = 0; t < this.factors.size(); t++) {
-                    if (this.factors.get(t).equals(hidFactors.get(0))) {
-                        this.factors.remove(t--); // remove from factor list
+                // join the factors that have the hidden node in them
+                int k = 0;
+                while (hidFactors.size() > 1) {
+                    factor join = join(hidFactors.get(k), hidFactors.get(k + 1));
+                    for (int t = 0; t < this.factors.size(); t++) {
+                        if (this.factors.get(t).equals(hidFactors.get(k))) {
+                            this.factors.remove(t--); // remove k from factor list
+                        }
                     }
+                    hidFactors.remove(hidFactors.get(k)); // remove k
+                    for (int t = 0; t < this.factors.size(); t++) {
+                        if (this.factors.get(t).equals(hidFactors.get(k))) {
+                            this.factors.remove(t--); // remove k+1 from factor list
+                        }
+                    }
+                    hidFactors.remove(hidFactors.get(k)); // remove k+1
+
+                    this.factors.add(join);
+                    hidFactors.add(join);
+
+                    removeOneSize(this.factors);
+                    removeOneSize(hidFactors);
+
+                    sort(this.factors);
+                    sort(hidFactors);
                 }
-                hidFactors.remove(0);
-                this.factors.add(elim);
-                hidFactors.add(elim);
+                // then, we will eliminate the node from that factor
+                if (hidFactors.size() != 0) {
+                    factor elim = eliminate(hidFactors.get(0), this.hidden.get(i));
+                    for (int t = 0; t < this.factors.size(); t++) {
+                        if (this.factors.get(t).equals(hidFactors.get(0))) {
+                            this.factors.remove(t--); // remove from factor list
+                        }
+                    }
+                    hidFactors.remove(0);
+                    this.factors.add(elim);
+                    hidFactors.add(elim);
 
-                removeOneSize(this.factors);
-                removeOneSize(hidFactors);
+                    removeOneSize(this.factors);
+                    removeOneSize(hidFactors);
 
-                sort(this.factors);
-                sort(hidFactors);
+                    sort(this.factors);
+                    sort(hidFactors);
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         //join the query
         factor res = new factor();
@@ -395,16 +400,20 @@ public class variableElimination {
             removeOneSize(this.factors);
             sort(this.factors);
         }
-        // only then normalize
-        res = normalize(this.factors.get(0));
         String answer = "";
-        for (int i = 0; i < res.factor.size(); i++) {
-            for (String key : res.factor.get(i).keySet()) {
-                if (key.equals(q[0]) && res.factor.get(i).get(key).equals(q[1])) {
-                    // if the answer is in return the value
-                    answer = res.factor.get(i).get("P");
+        try {
+            // only then normalize
+            res = normalize(this.factors.get(0));
+            for (int i = 0; i < res.factor.size(); i++) {
+                for (String key : res.factor.get(i).keySet()) {
+                    if (key.equals(q[0]) && res.factor.get(i).get(key).equals(q[1])) {
+                        // if the answer is in return the value
+                        answer = res.factor.get(i).get("P");
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         answer += "," + this.add + "," + this.multiply; // add the counters to the final answer
         return answer;
