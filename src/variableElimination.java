@@ -413,7 +413,7 @@ public class variableElimination {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         answer += "," + this.add + "," + this.multiply; // add the counters to the final answer
         return answer;
